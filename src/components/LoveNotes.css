@@ -1,0 +1,174 @@
+.notes__layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+}
+
+/* ── Compose card ── */
+.notes__compose {
+  position: sticky;
+  top: 100px;
+}
+.notes__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  background: linear-gradient(160deg, var(--ivory), var(--paper));
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+}
+.notes__form-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 360;
+}
+.notes__hidden {
+  position: absolute;
+  left: -9999px;
+}
+.notes__thanks {
+  font-style: italic;
+  color: var(--sage-deep);
+  font-size: 0.95rem;
+}
+
+/* ── Wall of handwritten notes ── */
+.notes__wall {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+}
+.note-card {
+  position: relative;
+  padding: 1.6rem 1.6rem 1.3rem;
+  background:
+    linear-gradient(180deg, #fffefb, var(--paper));
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(74, 63, 55, 0.05), 0 16px 30px -20px rgba(74, 63, 55, 0.4);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.5s var(--ease-soft), box-shadow 0.5s var(--ease-soft);
+}
+.note-card::before {
+  /* a sliver of "washi tape" */
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 64px;
+  height: 20px;
+  transform: translateX(-50%) rotate(calc(var(--tilt, 0deg) * -1.5));
+  background: linear-gradient(120deg, rgba(231, 182, 176, 0.55), rgba(216, 224, 203, 0.55));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.note-card:hover {
+  transform: rotate(0deg) translateY(-3px);
+  box-shadow: var(--card-shadow-lifted);
+}
+.note-card__flower {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  opacity: 0.5;
+}
+.note-card__message {
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.note-card__name {
+  margin-top: 0.7rem;
+  font-size: 1.6rem;
+  color: var(--rose-deep);
+}
+
+/* ── FAQ ── */
+.notes__faq {
+  max-width: 760px;
+  margin: clamp(3.5rem, 8vw, 5.5rem) auto 0;
+}
+.notes__faq-title {
+  text-align: center;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 360;
+  margin-bottom: 1.8rem;
+}
+.faq__item {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.25);
+}
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  list-style: none;
+  padding: 1.2rem 0.2rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  font-weight: 400;
+  color: var(--ink);
+  transition: color 0.4s var(--ease-soft);
+}
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+.faq__q:hover {
+  color: var(--rose-deep);
+}
+.faq__mark {
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+.faq__mark::before,
+.faq__mark::after {
+  content: '';
+  position: absolute;
+  background: var(--gold);
+  transition: transform 0.4s var(--ease-soft), opacity 0.4s var(--ease-soft);
+}
+.faq__mark::before {
+  top: 7px;
+  left: 0;
+  width: 16px;
+  height: 1.5px;
+}
+.faq__mark::after {
+  top: 0;
+  left: 7px;
+  width: 1.5px;
+  height: 16px;
+}
+.faq__item[open] .faq__mark::after {
+  transform: scaleY(0);
+  opacity: 0;
+}
+.faq__a {
+  padding: 0 0.2rem 1.3rem;
+  color: var(--ink-soft);
+  animation: faq-open 0.5s var(--ease-soft);
+}
+@keyframes faq-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 860px) {
+  .notes__layout {
+    grid-template-columns: 1fr;
+  }
+  .notes__compose {
+    position: static;
+  }
+}

@@ -1,0 +1,32 @@
+.butterfly {
+  display: inline-block;
+  line-height: 0;
+}
+
+/* Hinge each wing at the body line so the flap reads naturally. */
+.butterfly__wing {
+  transform-box: fill-box;
+  animation: butterfly-flap 0.36s ease-in-out infinite alternate;
+}
+.butterfly__wing--l {
+  transform-origin: right center;
+}
+.butterfly__wing--r {
+  transform-origin: left center;
+}
+
+@keyframes butterfly-flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .butterfly__wing {
+    animation: none;
+    transform: scaleX(0.82);
+  }
+}

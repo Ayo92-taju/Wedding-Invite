@@ -1,0 +1,439 @@
+/* ============================================================
+   LOVE IN FULL BLOOM — Design System
+   Nimi & Victor · luxury editorial garden
+   ============================================================ */
+
+:root {
+  /* ── Palette ─────────────────────────────────────────────
+     Warm papers, muted rose, soft sage, gold foil.
+     No pure black / white anywhere — warmth in every tone.   */
+  --cream: #f7f1e6;
+  --cream-deep: #efe5d3;
+  --paper: #fbf6ec;
+  --ivory: #fffdf8;
+
+  --blush: #e7b6b0;
+  --blush-soft: #f4ddd8;
+  --blush-mist: #faecea;
+  --rose: #c98b86;
+  --rose-deep: #a4615d;
+
+  --sage: #aebd9d;
+  --sage-soft: #d8e0cb;
+  --sage-deep: #6f7f5e;
+  --sage-ink: #586a49;
+
+  --gold: #c9a227;
+  --gold-soft: #ddc278;
+  --gold-pale: #ecdcae;
+  --gold-deep: #9c7c18;
+
+  --ink: #4a3f37;
+  --ink-soft: #7c7065;
+  --ink-faint: #a89d90;
+
+  /* ── Typography ──────────────────────────────────────────  */
+  --font-display: 'Fraunces', 'Times New Roman', serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-script: 'Pinyon Script', 'Brush Script MT', cursive;
+
+  /* ── Spacing & rhythm ────────────────────────────────────  */
+  --space-section: clamp(5rem, 12vw, 11rem);
+  --maxw: 1180px;
+  --maxw-narrow: 760px;
+
+  /* ── Surfaces ────────────────────────────────────────────  */
+  --radius: 4px;
+  --radius-lg: 10px;
+  --card-shadow: 0 2px 4px rgba(74, 63, 55, 0.04),
+    0 18px 40px -22px rgba(74, 63, 55, 0.28);
+  --card-shadow-lifted: 0 4px 8px rgba(74, 63, 55, 0.05),
+    0 36px 70px -30px rgba(110, 90, 60, 0.38);
+  --gold-line: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-soft) 18%,
+    var(--gold) 50%,
+    var(--gold-soft) 82%,
+    transparent
+  );
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bloom: cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+/* ── Reset ────────────────────────────────────────────────  */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: clamp(1.02rem, 0.55vw + 0.9rem, 1.18rem);
+  line-height: 1.75;
+  color: var(--ink);
+  background-color: var(--cream);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Atmospheric ground: soft radial blooms of blush & sage over warm paper. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 70% 55% at 12% 8%, var(--blush-mist), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 92% 22%, rgba(214, 224, 203, 0.5), transparent 62%),
+    radial-gradient(ellipse 80% 60% at 50% 108%, rgba(244, 221, 216, 0.6), transparent 65%),
+    linear-gradient(180deg, var(--ivory), var(--cream) 38%, var(--cream-deep));
+}
+
+/* Handmade-paper grain overlay. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+/* ── Headings ─────────────────────────────────────────────  */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 380;
+  font-optical-sizing: auto;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--blush-soft);
+  color: var(--rose-deep);
+}
+
+/* Thin gold scrollbar for the drifting feel. */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold-pale);
+  border-radius: 10px;
+  border: 3px solid var(--cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-soft);
+}
+
+/* ============================================================
+   Shared layout + typographic utilities
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3.5rem);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+/* Page content sits above the drifting petal field (z:1) but below the
+   butterflies (z:20) and cursor petals (z:60). */
+.page {
+  position: relative;
+  z-index: 10;
+}
+
+/* Small letter-spaced label above headings. */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9em;
+}
+.eyebrow::before,
+.eyebrow::after {
+  content: '';
+  width: clamp(1.4rem, 4vw, 2.6rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
+}
+
+/* The couple's names / romantic accents, in calligraphy. */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  color: var(--rose-deep);
+  letter-spacing: 0.01em;
+  line-height: 0.9;
+}
+
+.section-title {
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-weight: 360;
+  margin-top: 0.5rem;
+}
+
+.lede {
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+  color: var(--ink-soft);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.center {
+  text-align: center;
+}
+
+/* Gold foil text — subtle metallic shimmer. */
+.foil {
+  background: linear-gradient(
+    100deg,
+    var(--gold-deep) 0%,
+    var(--gold) 25%,
+    #f1dea0 48%,
+    var(--gold) 62%,
+    var(--gold-deep) 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-deep);
+  animation: foil-shimmer 7s linear infinite;
+}
+
+/* ============================================================
+   Buttons — the gentle, ribbon-like CTA
+   ============================================================ */
+.btn {
+  --btn-fg: var(--ink);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  padding: 0.95em 2.4em;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--btn-fg);
+  background: var(--ivory);
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  transition: color 0.5s var(--ease-soft), border-color 0.5s var(--ease-soft),
+    box-shadow 0.5s var(--ease-soft), transform 0.5s var(--ease-soft);
+  box-shadow: 0 10px 24px -16px rgba(156, 124, 24, 0.6);
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, var(--blush), var(--rose) 55%, var(--gold-soft));
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.55s var(--ease-soft), transform 0.6s var(--ease-bloom);
+  border-radius: inherit;
+}
+.btn:hover {
+  color: var(--ivory);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -18px rgba(164, 97, 93, 0.75);
+}
+.btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.btn--solid {
+  color: var(--ivory);
+  background: linear-gradient(120deg, var(--rose), var(--rose-deep));
+  border-color: transparent;
+}
+.btn--solid::before {
+  background: linear-gradient(120deg, var(--rose-deep), #8a4a47);
+}
+
+/* ============================================================
+   Keyframes — drift, bloom, shimmer
+   ============================================================ */
+@keyframes foil-shimmer {
+  to {
+    background-position: 220% center;
+  }
+}
+
+@keyframes gentle-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.float-soft {
+  animation: gentle-float 8s ease-in-out infinite;
+}
+
+/* ============================================================
+   Accessibility — honour reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hidden utility (kept accessible for screen readers). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   Form fields — shared by Love Notes & RSVP
+   ============================================================ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+.field__label {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+}
+.field__input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--ivory);
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  transition: border-color 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft),
+    background 0.4s var(--ease-soft);
+}
+.field__input::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.field__input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: #fffefb;
+  box-shadow: 0 0 0 3px rgba(221, 194, 120, 0.28);
+}
+.field__textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}

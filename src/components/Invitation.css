@@ -1,0 +1,239 @@
+.invitation {
+  position: relative;
+}
+.invitation__container {
+  display: flex;
+  justify-content: center;
+}
+
+.inv {
+  width: 100%;
+  max-width: 640px;
+  perspective: 2200px;
+}
+
+.inv__card {
+  position: relative;
+  border-radius: var(--radius-lg);
+}
+
+/* ── The letter beneath ── */
+.inv__letter {
+  position: relative;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 20% 0%, #fffefb, transparent 55%),
+    linear-gradient(160deg, var(--ivory), var(--paper));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow-lifted);
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3.5rem);
+}
+
+.inv__letter-frame {
+  position: relative;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 3px;
+  padding: clamp(2.4rem, 6vw, 4rem) clamp(1.4rem, 5vw, 3rem) clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inv__letter-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.inv__corner {
+  position: absolute;
+  opacity: 0.8;
+}
+.inv__corner--tl {
+  top: -22px;
+  left: -16px;
+}
+.inv__corner--br {
+  bottom: -22px;
+  right: -16px;
+}
+
+.inv__names {
+  font-size: clamp(2.6rem, 9vw, 4.6rem);
+  margin: 0.6rem 0 1rem;
+  line-height: 0.9;
+}
+.inv__amp {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.4em;
+  color: var(--gold-deep);
+  vertical-align: middle;
+}
+
+.inv__note {
+  max-width: 40ch;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+.inv__detail-row {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1rem, 4vw, 2.6rem);
+  margin-bottom: 1.8rem;
+}
+.inv__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+}
+.inv__detail-divider {
+  width: 1px;
+  background: linear-gradient(var(--gold-soft), transparent);
+}
+.inv__detail-label,
+.inv__place .inv__detail-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+}
+.inv__detail-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+  font-weight: 400;
+}
+.inv__detail-sub {
+  font-size: 0.86rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.inv__place {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+  margin-bottom: 2.2rem;
+}
+.inv__place-venue {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  color: var(--ink);
+}
+
+.inv__rsvp {
+  margin-top: 0.5rem;
+}
+
+/* ── The folding cover ── */
+.inv__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  transform-origin: top center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 30%, #fdf3ef, transparent 60%),
+    linear-gradient(155deg, var(--blush-soft), var(--cream) 55%, var(--sage-soft));
+  box-shadow: var(--card-shadow-lifted);
+}
+.inv__cover::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.inv__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* faint pressed-floral imprint */
+  background-image: radial-gradient(circle at 50% 50%, rgba(201, 162, 39, 0.05) 0 8px, transparent 9px);
+  background-size: 46px 46px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.inv__cover-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 2rem;
+}
+.eyebrow--cream {
+  color: var(--rose-deep);
+}
+
+.inv__seal {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 38% 32%, #d98d87, #a4615d 60%, #8a4a47);
+  box-shadow:
+    inset 0 3px 8px rgba(255, 255, 255, 0.35),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.28),
+    0 12px 26px -10px rgba(138, 74, 71, 0.7);
+}
+.inv__seal::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 248, 240, 0.55);
+}
+.inv__seal-mono {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 420;
+  color: #fdeee9;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.inv__cover-hint {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  animation: soft-pulse 2.6s ease-in-out infinite;
+}
+
+@media (max-width: 540px) {
+  .inv__detail-row {
+    flex-direction: column;
+    gap: 1.4rem;
+    align-items: center;
+  }
+  .inv__detail-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
+  }
+}

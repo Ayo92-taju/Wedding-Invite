@@ -1,0 +1,113 @@
+.bloom-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  cursor: pointer;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 40%, #fffdf8 0%, #faeceac0 46%, #f3e3d2 100%),
+    var(--cream);
+  outline: none;
+}
+
+.bloom-intro__stage {
+  position: relative;
+  width: min(72vw, 320px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.bloom-intro__glow {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(236, 220, 174, 0.9),
+    rgba(231, 182, 176, 0.32) 46%,
+    transparent 72%
+  );
+  filter: blur(10px);
+}
+
+.bloom-intro__flower {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  transform-origin: center;
+  filter: drop-shadow(0 18px 32px rgba(164, 97, 93, 0.25));
+}
+.bloom-intro__flower--inner {
+  filter: drop-shadow(0 10px 18px rgba(164, 97, 93, 0.3));
+}
+
+.bloom-intro__words {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+}
+
+.bloom-intro__names {
+  font-size: clamp(3.4rem, 12vw, 6rem);
+  line-height: 0.92;
+}
+.bloom-intro__amp {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.32em;
+  color: var(--gold-deep);
+  vertical-align: middle;
+  margin-inline: 0.32em;
+}
+
+.bloom-intro__tag {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-top: 0.4rem;
+}
+
+.bloom-intro__skip {
+  position: absolute;
+  bottom: clamp(1.5rem, 5vh, 3rem);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  font-family: var(--font-body);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  transition: color 0.4s var(--ease-soft), letter-spacing 0.4s var(--ease-soft);
+}
+.bloom-intro:hover .bloom-intro__skip {
+  color: var(--rose-deep);
+  letter-spacing: 0.3em;
+}
+.bloom-intro__skip-arrow {
+  display: inline-block;
+  animation: skip-nudge 1.8s ease-in-out infinite;
+}
+@keyframes skip-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+}

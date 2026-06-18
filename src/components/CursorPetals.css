@@ -1,0 +1,35 @@
+.cursor-petals {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.cursor-petals__p {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  animation: cursor-drift 1.7s ease-out forwards;
+  filter: drop-shadow(0 3px 4px rgba(164, 97, 93, 0.18));
+}
+.cursor-petals__p svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes cursor-drift {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.35);
+  }
+  22% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% - 64px)) rotate(calc(var(--rot) + 140deg))
+      scale(1);
+  }
+}

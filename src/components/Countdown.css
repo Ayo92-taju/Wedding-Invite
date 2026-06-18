@@ -1,0 +1,105 @@
+.countdown {
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.countdown::before {
+  content: '';
+  position: absolute;
+  inset: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 4rem);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(244, 221, 216, 0.5), transparent 65%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.6), rgba(216, 224, 203, 0.28));
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 18px;
+  z-index: -1;
+}
+
+.countdown__accent {
+  position: absolute;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.countdown__accent--l {
+  top: 18%;
+  left: 4%;
+}
+.countdown__accent--r {
+  bottom: 12%;
+  right: 4%;
+  animation-delay: -4s;
+}
+
+.countdown__timer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: clamp(0.6rem, 3vw, 2.2rem);
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+.countdown__unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: clamp(64px, 16vw, 120px);
+}
+.countdown__value {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
+  font-weight: 340;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.countdown__label {
+  margin-top: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+}
+.countdown__sep {
+  position: absolute;
+  right: clamp(-1.1rem, -1.5vw, -0.3rem);
+  top: 30%;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--gold-soft);
+}
+
+.countdown__date {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.countdown__done {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+.countdown__done-text {
+  font-size: clamp(3rem, 9vw, 5rem);
+  color: var(--rose-deep);
+  margin-bottom: 0.6rem;
+}
+
+/* Decorative accents are desktop-only; ambient petals carry the atmosphere
+   on smaller screens (and never overlap the heading). */
+@media (max-width: 960px) {
+  .countdown__accent {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .countdown__sep {
+    display: none;
+  }
+  .countdown__unit {
+    min-width: 70px;
+  }
+}
