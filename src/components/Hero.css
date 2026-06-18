@@ -2,17 +2,22 @@
   position: relative;
   min-height: 100svh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding-block: clamp(7rem, 14vh, 11rem) clamp(4rem, 10vh, 7rem);
+  padding-block: clamp(7rem, 14vh, 10rem) clamp(2rem, 5vh, 3.25rem);
   overflow: hidden;
 }
 
+/* Takes the remaining height and centres the welcome within it, so the
+   scroll cue below it always has its own space. */
 .hero__inner {
+  flex: 1 1 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   max-width: 900px;
 }
 
@@ -98,10 +103,9 @@
 
 /* scroll cue */
 .hero__scroll {
-  position: absolute;
-  bottom: clamp(1.5rem, 4vh, 2.5rem);
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  flex-shrink: 0;
+  margin-top: clamp(1.75rem, 4vh, 3rem);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -143,5 +147,32 @@
   .hero__accent--br {
     right: -6%;
     opacity: 0.5;
+  }
+}
+
+/* On shorter viewports (laptops, landscape phones), compress the welcome so
+   the scroll cue stays visible and distinct at the bottom of the section. */
+@media (max-height: 880px) {
+  .hero {
+    padding-block: clamp(5.5rem, 11vh, 8rem) clamp(1.4rem, 3vh, 2.25rem);
+  }
+  .hero__names {
+    margin-top: 0.6rem;
+  }
+  .hero__name {
+    font-size: clamp(3rem, 11vw, 6rem);
+  }
+  .hero__sub {
+    margin-bottom: 1rem;
+    font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+  }
+  .hero__cta-row {
+    margin-top: 1.5rem;
+  }
+  .hero__scroll {
+    margin-top: clamp(1rem, 2.5vh, 1.75rem);
+  }
+  .hero__scroll-line {
+    height: 34px;
   }
 }
