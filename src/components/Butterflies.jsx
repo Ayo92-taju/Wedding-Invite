@@ -4,8 +4,8 @@ import Butterfly from './ui/Butterfly.jsx'
 import './Butterflies.css'
 
 /*
- * A few butterflies that drift slowly across the page, fluttering as they go.
- * Subtle by design — never more than a gentle accent.
+ * A few butterflies that wander slowly across the page, bobbing and tilting as
+ * they go, each with its own wingbeat. Subtle by design — a gentle accent.
  */
 export default function Butterflies({ count = 3, zIndex = 2 }) {
   const reduce = useReducedMotion()
@@ -14,11 +14,13 @@ export default function Butterflies({ count = 3, zIndex = 2 }) {
     const variants = ['blush', 'sage', 'gold']
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      top: 15 + Math.random() * 60,
-      size: 26 + Math.random() * 16,
-      duration: 26 + Math.random() * 16,
+      top: 14 + Math.random() * 62,
+      size: 26 + Math.random() * 18,
+      duration: 28 + Math.random() * 18,
       delay: -Math.random() * 30,
-      drift: 8 + Math.random() * 16,
+      drift: 9 + Math.random() * 18,
+      flap: 0.42 + Math.random() * 0.22,
+      scale: 0.82 + Math.random() * 0.32,
       variant: variants[i % variants.length],
       dir: i % 2 === 0 ? 1 : -1,
     }))
@@ -37,10 +39,11 @@ export default function Butterflies({ count = 3, zIndex = 2 }) {
             '--dur': `${f.duration}s`,
             '--delay': `${f.delay}s`,
             '--drift': `${f.drift}vh`,
+            '--scale': f.scale,
           }}
         >
           <span className="butterflies__bob">
-            <Butterfly size={f.size} variant={f.variant} />
+            <Butterfly size={f.size} variant={f.variant} flapDuration={f.flap} />
           </span>
         </span>
       ))}

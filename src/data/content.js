@@ -84,6 +84,20 @@ export const loveStory = [
   },
 ]
 
+/* A note from the couple — a heartfelt letter, in their own voice.
+   Keep paragraphs short; they reveal one by one, like ink finding the page. */
+export const letter = {
+  eyebrow: 'A note from us',
+  salutation: 'Dearest friends,',
+  paragraphs: [
+    'If you are reading this, you are someone who has helped write our story — and we can scarcely believe the day is almost here.',
+    'When we pictured this moment, it was never really about the flowers or the music. It was about this: the people we love, gathered in one garden, while we promise each other forever.',
+    'Thank you for loving us, for cheering us on, and for travelling near or far to stand beside us. Come ready to laugh, to cry a little, and to dance until the very last petal falls.',
+  ],
+  closing: 'With all our love,',
+  signature: 'Nimi & Victor',
+}
+
 /* Garden of Gifts — your registry links. */
 export const registry = {
   note:

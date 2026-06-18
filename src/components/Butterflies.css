@@ -17,33 +17,41 @@
   animation: bfly-cross-rtl var(--dur) linear var(--delay) infinite;
 }
 
-/* Vertical bobbing layered on top of the horizontal crossing. */
+/* Vertical wander + tilt + a little depth (scale), layered over the crossing. */
 .butterflies__bob {
   display: inline-block;
-  animation: bfly-bob calc(var(--dur) / 9) ease-in-out var(--delay) infinite alternate;
+  animation: bfly-bob calc(var(--dur) / 7) ease-in-out var(--delay) infinite alternate;
 }
 
 @keyframes bfly-cross-ltr {
   from {
-    transform: translateX(-10vw);
+    transform: translateX(-10vw) scale(var(--scale, 1));
   }
   to {
-    transform: translateX(112vw);
+    transform: translateX(112vw) scale(var(--scale, 1));
   }
 }
 @keyframes bfly-cross-rtl {
   from {
-    transform: translateX(112vw) scaleX(-1);
+    transform: translateX(112vw) scale(var(--scale, 1)) scaleX(-1);
   }
   to {
-    transform: translateX(-10vw) scaleX(-1);
+    transform: translateX(-10vw) scale(var(--scale, 1)) scaleX(-1);
   }
 }
+
+/* A wandering bob with several stops so the flight never feels mechanical. */
 @keyframes bfly-bob {
-  from {
-    transform: translateY(calc(var(--drift) * -0.5)) rotate(-8deg);
+  0% {
+    transform: translateY(calc(var(--drift) * -0.5)) rotate(-9deg);
   }
-  to {
+  35% {
+    transform: translateY(calc(var(--drift) * 0.35)) rotate(6deg);
+  }
+  65% {
+    transform: translateY(calc(var(--drift) * -0.2)) rotate(-4deg);
+  }
+  100% {
     transform: translateY(calc(var(--drift) * 0.5)) rotate(8deg);
   }
 }

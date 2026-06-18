@@ -36,6 +36,7 @@ Requires Node 18+ (developed on Node 24).
 | `couple` | Names, initials/monogram, tagline, intro line |
 | `wedding` | **Date & time** (`dateTimeISO` drives the countdown), venue, address, reception, dress code, invitation note |
 | `loveStory` | The milestones on the garden timeline (year, title, text) |
+| `letter` | The couple's handwritten note — salutation, paragraphs, closing, signature |
 | `registry` | Your "Garden of Gifts" — name, description and **link** per registry |
 | `loveNotes` | The intro line + a few starter notes shown on the wall |
 | `faqs` | The "Before you ask…" questions & answers |
@@ -115,8 +116,8 @@ src/
   lib/netlify.js         ← Netlify Forms helper
   hooks/useCountdown.js  ← live countdown logic
   components/
-    BloomIntro · PetalField · Butterflies · CursorPetals   (intro + ambience)
-    Nav · Hero · Invitation · LoveStory · WeddingDetails
+    BloomIntro · LivingGarden · PetalField · Butterflies · CursorPetals  (intro + living ambience)
+    Nav · Hero · Invitation · LoveStory · Letter · WeddingDetails
     Countdown · Registry · LoveNotes · Rsvp · Footer
     ui/  Flower · Butterfly · FloralDivider · Reveal · SectionHeading
 ```
@@ -126,7 +127,7 @@ src/
 ## ✅ To replace before going live
 
 - [ ] Real names spelling, date/time, venue & address in `content.js`
-- [ ] Real love-story milestones and registry links
+- [ ] Real love-story milestones, registry links, and the couple's letter (`letter` in `content.js`)
 - [ ] Replace `public/og-image.svg` with a 1200×630 **PNG** for best social previews
 - [ ] (Optional) set up Netlify form notifications
 

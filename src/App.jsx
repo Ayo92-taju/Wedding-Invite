@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import BloomIntro from './components/BloomIntro.jsx'
+import LivingGarden from './components/LivingGarden.jsx'
 import PetalField from './components/PetalField.jsx'
 import Butterflies from './components/Butterflies.jsx'
 import CursorPetals from './components/CursorPetals.jsx'
@@ -10,6 +11,7 @@ import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import Invitation from './components/Invitation.jsx'
 import LoveStory from './components/LoveStory.jsx'
+import Letter from './components/Letter.jsx'
 import WeddingDetails from './components/WeddingDetails.jsx'
 import Countdown from './components/Countdown.jsx'
 import Registry from './components/Registry.jsx'
@@ -26,6 +28,9 @@ export default function App() {
         {!introDone && <BloomIntro key="intro" onComplete={() => setIntroDone(true)} />}
       </AnimatePresence>
 
+      {/* Living garden — light shifts with scroll; fireflies arrive at dusk. */}
+      <LivingGarden fireflyCount={16} />
+
       {/* Ambient layers — petals drift behind the content (z:1),
           butterflies (z:20) and cursor petals (z:60) float above it. */}
       <PetalField count={14} zIndex={1} />
@@ -39,6 +44,7 @@ export default function App() {
           <Hero active={introDone} />
           <Invitation />
           <LoveStory />
+          <Letter />
           <WeddingDetails />
           <Countdown />
           <Registry />
