@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+/*
+ * Tailwind is loaded here for the admin dashboard. The public wedding site
+ * uses its own design system in src/styles/global.css (imported in layout),
+ * which intentionally loads AFTER this so its tokens win.
+ */

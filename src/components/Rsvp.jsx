@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { QRCodeCanvas } from 'qrcode.react'
 import SectionHeading from './ui/SectionHeading.jsx'
 import Flower from './ui/Flower.jsx'
 import { couple, wedding } from '../data/content.js'
-import { submitToNetlify } from '../lib/netlify.js'
+import { submitRsvp, shortCode } from '../lib/rsvp.js'
+import { sendRsvpConfirmation } from '../lib/email.js'
 import './Rsvp.css'
 
 /* A tiny flower tucked into the centre of the QR — the "floral" QR. */
@@ -25,10 +26,9 @@ export default function Rsvp() {
   const reduce = useReducedMotion()
   const [form, setForm] = useState(empty)
   const [step, setStep] = useState('form') // form · sealing · pass · declined
+  const [passCode, setPassCode] = useState('')
+  const [saveError, setSaveError] = useState(false)
   const passRef = useRef(null)
-
-  const code = codeFor(form.name || 'guest', form.guests)
-  const payload = `NIMI & VICTOR WEDDING\nGuest: ${form.name}\nAdmits: ${form.guests}\nPass: ${code}\n${wedding.dayShort}`
 
   const change = (e) => {
     const { name, value } = e.target
@@ -39,18 +39,39 @@ export default function Rsvp() {
     e.preventDefault()
     if (!form.name.trim() || !form.email.trim()) return
 
+    const attendingYes = form.attending === 'yes'
+    // Begin the sealing ritual immediately; the record is written while it plays.
+    if (attendingYes) setStep('sealing')
+
+    let record = null
+    let failed = false
     try {
-      await submitToNetlify('rsvp', { ...form })
-    } catch {
-      /* local dev / offline — proceed with the ritual regardless */
+      record = await submitRsvp(form)
+    } catch (err) {
+      failed = true
+      console.warn('RSVP save failed; showing the pass anyway.', err)
     }
 
-    if (form.attending === 'no') {
+    setPassCode(record?.qrCode || codeFor(form.name || 'guest', form.guests))
+    setSaveError(failed)
+
+    // Send the confirmation + pass by email — only on a fresh, saved RSVP.
+    if (attendingYes && !failed && record?.qrCode && !record?.alreadyReplied) {
+      sendRsvpConfirmation({
+        name: record.name || form.name.trim(),
+        email: record.email || form.email.trim(),
+        qrCode: record.qrCode,
+        guestsCount: record.guestsCount,
+        attending: true,
+        message: record.message,
+      })
+    }
+
+    if (!attendingYes) {
       setStep('declined')
       return
     }
-    setStep('sealing')
-    window.setTimeout(() => setStep('pass'), reduce ? 200 : 1500)
+    window.setTimeout(() => setStep('pass'), reduce ? 200 : 1200)
   }
 
   const downloadPass = () => {
@@ -64,6 +85,8 @@ export default function Rsvp() {
 
   const reset = () => {
     setForm(empty)
+    setPassCode('')
+    setSaveError(false)
     setStep('form')
   }
 
@@ -196,7 +219,7 @@ export default function Rsvp() {
                   <Flower className="rsvp__seal-petal rsvp__seal-petal--b" size={26} variant="sage" petals={6} strokeWidth={0.8} />
                   <div className="rsvp__qr">
                     <QRCodeCanvas
-                      value={payload}
+                      value={passCode}
                       size={150}
                       level="H"
                       fgColor="#4a3f37"
@@ -207,7 +230,7 @@ export default function Rsvp() {
                   </div>
                 </div>
 
-                <p className="rsvp__pass-code">{code}</p>
+                <p className="rsvp__pass-code">{shortCode(passCode)}</p>
                 <p className="rsvp__pass-meta">
                   {wedding.dayShort} · {wedding.ceremony.venue}
                 </p>
@@ -221,7 +244,9 @@ export default function Rsvp() {
                   </button>
                 </div>
                 <p className="rsvp__pass-hint">
-                  Keep this floral seal — it’s your welcome into the garden. ❀
+                  {saveError
+                    ? 'Keep this floral seal safe — we’ll confirm your reply shortly. ❀'
+                    : 'Keep this floral seal — it’s your welcome into the garden. ❀'}
                 </p>
               </motion.div>
             )}

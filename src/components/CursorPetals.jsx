@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'motion/react'
 import './CursorPetals.css'
 
 const COLORS = ['#e7b6b0', '#f4ddd8', '#ddc278', '#cdd9be', '#f0c9c3']

@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'motion/react'
 
 import BloomIntro from './components/BloomIntro.jsx'
 import LivingGarden from './components/LivingGarden.jsx'
@@ -28,31 +30,38 @@ export default function App() {
         {!introDone && <BloomIntro key="intro" onComplete={() => setIntroDone(true)} />}
       </AnimatePresence>
 
-      {/* Living garden — light shifts with scroll; fireflies arrive at dusk. */}
-      <LivingGarden fireflyCount={16} />
+      {/* The site mounts only once the intro lifts — no need to render (and
+          animate) the whole garden behind an opaque overlay. Its exit and the
+          site's entrance overlap for a seamless reveal. Hero reveals on mount. */}
+      {introDone && (
+        <>
+          {/* Living garden — light shifts with scroll; fireflies arrive at dusk. */}
+          <LivingGarden fireflyCount={16} />
 
-      {/* Ambient layers — petals drift behind the content (z:1),
-          butterflies (z:20) and cursor petals (z:60) float above it. */}
-      <PetalField count={14} zIndex={1} />
-      <Butterflies count={3} zIndex={20} />
-      <CursorPetals />
+          {/* Ambient layers — petals drift behind the content (z:1),
+              butterflies (z:20) and cursor petals (z:60) float above it. */}
+          <PetalField count={14} zIndex={1} />
+          <Butterflies count={3} zIndex={20} />
+          <CursorPetals />
 
-      <Nav />
+          <Nav />
 
-      <div className="page">
-        <main>
-          <Hero active={introDone} />
-          <Invitation />
-          <LoveStory />
-          <Letter />
-          <WeddingDetails />
-          <Countdown />
-          <Registry />
-          <LoveNotes />
-          <Rsvp />
-        </main>
-        <Footer />
-      </div>
+          <div className="page">
+            <main>
+              <Hero active />
+              <Invitation />
+              <LoveStory />
+              <Letter />
+              <WeddingDetails />
+              <Countdown />
+              <Registry />
+              <LoveNotes />
+              <Rsvp />
+            </main>
+            <Footer />
+          </div>
+        </>
+      )}
     </>
   )
 }

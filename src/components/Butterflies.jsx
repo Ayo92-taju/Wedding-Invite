@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { useReducedMotion } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
+import { useReducedMotion } from 'motion/react'
 import Butterfly from './ui/Butterfly.jsx'
 import './Butterflies.css'
 
@@ -9,6 +9,10 @@ import './Butterflies.css'
  */
 export default function Butterflies({ count = 3, zIndex = 2 }) {
   const reduce = useReducedMotion()
+  // Client-only: positions use Math.random(), so render nothing on the server
+  // to avoid a hydration mismatch.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const flutters = useMemo(() => {
     const variants = ['blush', 'sage', 'gold']
@@ -26,7 +30,7 @@ export default function Butterflies({ count = 3, zIndex = 2 }) {
     }))
   }, [count])
 
-  if (reduce) return null
+  if (reduce || !mounted) return null
 
   return (
     <div className="butterflies" style={{ zIndex }} aria-hidden="true">

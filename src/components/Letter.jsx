@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'motion/react'
 import Flower from './ui/Flower.jsx'
 import { letter } from '../data/content.js'
 import './Letter.css'

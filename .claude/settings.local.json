@@ -6,7 +6,28 @@
       "Bash(git --version)",
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(cd \"C:/Users/ayota/OneDrive/Documents/GitHub/Wedding Invite\" && echo \"=== zips in project dir ===\" && find . -maxdepth 2 -iname \"*.zip\" -not -path \"./node_modules/*\" 2>/dev/null; echo \"=== zips in Downloads ===\" && find \"C:/Users/ayota/Downloads\" -maxdepth 1 -iname \"*.zip\" 2>/dev/null | head -20; echo \"=== zips on Desktop ===\" && find \"C:/Users/ayota/Desktop\" -maxdepth 2 -iname \"*.zip\" 2>/dev/null | head -20)",
+      "Bash(unzip -l \"nimi-and-victor.zip\")",
+      "Bash(grep -iE \"\\\\.\\(ts|tsx|js|jsx|mjs|json|prisma|env|sql|md\\)$\")",
+      "Bash(awk '{print $4}')",
+      "Bash(unzip -l \"nimi-&-victor's-wedding.zip\")",
+      "Bash(grep -vE \"^$\")",
+      "Bash(mkdir -p C:/Users/ayota/AppData/Local/Temp/claude/C--Users-ayota-OneDrive-Documents-GitHub-Wedding-Invite/bc2ef944-1870-4fde-94cf-f83eb78cee72/scratchpad/next-proj C:/Users/ayota/AppData/Local/Temp/claude/C--Users-ayota-OneDrive-Documents-GitHub-Wedding-Invite/bc2ef944-1870-4fde-94cf-f83eb78cee72/scratchpad/vite-proj)",
+      "Bash(unzip -o -q nimi-and-victor.zip -d C:/Users/ayota/AppData/Local/Temp/claude/C--Users-ayota-OneDrive-Documents-GitHub-Wedding-Invite/bc2ef944-1870-4fde-94cf-f83eb78cee72/scratchpad/next-proj -x public/* *.lock *lock.json)",
+      "Bash(unzip -o -q 'nimi-&-victor'\\\\''s-wedding.zip' -d C:/Users/ayota/AppData/Local/Temp/claude/C--Users-ayota-OneDrive-Documents-GitHub-Wedding-Invite/bc2ef944-1870-4fde-94cf-f83eb78cee72/scratchpad/vite-proj)",
+      "Bash(mkdir -p .vite-backup)",
+      "Bash(cp package.json .vite-backup/package.json)",
+      "Bash(cp vite.config.js .vite-backup/)",
+      "Bash(cp index.html .vite-backup/)",
+      "Bash(cp netlify.toml .vite-backup/)",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash([ -d \"$SCRATCH/next-proj/src\" ])",
+      "Bash(echo \"scratch present\")",
+      "Bash(echo \"re-extracting\")",
+      "Bash(mkdir -p C:/Users/ayota/AppData/Local/Temp/claude/C--Users-ayota-OneDrive-Documents-GitHub-Wedding-Invite/bc2ef944-1870-4fde-94cf-f83eb78cee72/scratchpad/next-proj)",
+      "Bash(cd \"C:/Users/ayota/OneDrive/Documents/GitHub/Wedding Invite\")",
+      "Bash(node -e \"const c=require\\('./firebase-applet-config.json'\\); console.log\\('projectId:', c.projectId\\); console.log\\('firestoreDatabaseId:', c.firestoreDatabaseId\\);\")"
     ]
   }
 }

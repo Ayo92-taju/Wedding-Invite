@@ -1,0 +1,215 @@
+{
+  "entities": {
+    "Guest": {
+      "title": "Guest",
+      "description": "Represents a wedding guest RSVP, contact info, event attendance, and seating assignment",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the guest" },
+        "phone": { "type": "string", "description": "Phone number for updates" },
+        "email": { "type": "string", "format": "email", "description": "Email address for boarding pass delivery" },
+        "attendingWhite": { "type": "boolean", "description": "Attending the White Wedding event" },
+        "attendingTraditional": { "type": "boolean", "description": "Attending the Traditional Wedding event" },
+        "inviteCategoryId": { "type": "string", "description": "The ID of the referring invite category" },
+        "inviteCategoryName": { "type": "string", "description": "The name of the referring invite category (e.g., Groom's family)" },
+        "guestsCount": { "type": "integer", "description": "Number of plus-ones" },
+        "dietaryRequirements": { "type": "string", "description": "Food allergies or preferences" },
+        "tableAssignment": { "type": "string", "description": "Table assigned to the guest" },
+        "seatAssignment": { "type": "string", "description": "Seat assigned to the guest" },
+        "qrCode": { "type": "string", "description": "Unique QR code string" },
+        "emailSent": { "type": "boolean", "description": "Whether the boarding pass has been successfully simulated emailed" },
+        "eventAssignments": { "type": "object", "description": "Event-specific table & seat allocations" },
+        "checkedInWhite": { "type": "boolean", "description": "Pass boarded for the White Wedding ceremony" },
+        "checkinTimeWhite": { "type": "string", "format": "date-time", "description": "Timestamp of boarding for the White Wedding" },
+        "checkedInTraditional": { "type": "boolean", "description": "Pass boarded for the Traditional Wedding ceremony" },
+        "checkinTimeTraditional": { "type": "string", "format": "date-time", "description": "Timestamp of boarding for the Traditional Wedding" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "email", "attendingWhite", "attendingTraditional", "inviteCategoryId", "inviteCategoryName", "qrCode", "createdAt"]
+    },
+    "InviteCategory": {
+      "title": "Invite Category",
+      "description": "Represents a segment of invitees (e.g., Groom's parents, Bride's friends) with an entry password",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the group (e.g. Groom's Family)" },
+        "password": { "type": "string", "description": "Unique secret password to authenticate guests in this group" },
+        "asoEbiContactName": { "type": "string", "description": "Name of contact person for purchasing Aso Ebi" },
+        "asoEbiContactPhone": { "type": "string", "description": "Phone number/WhatsApp of contact person for purchasing Aso Ebi" },
+        "createdBy": { "type": "string", "description": "User UID who created this category" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "password", "createdAt"]
+    },
+    "EventDetails": {
+      "title": "Event Details",
+      "description": "Represents one of the wedding events (e.g., White Wedding or Traditional Wedding)",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "venue": { "type": "string" },
+        "dressCode": { "type": "string" },
+        "dressCodeMen": { "type": "string" },
+        "dressCodeWomenOlder": { "type": "string" },
+        "dressCodeWomenYounger": { "type": "string" },
+        "schedule": {
+          "type": "array",
+          "description": "List of schedule items with time and activity"
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "date", "time", "venue", "dressCode", "createdAt", "updatedAt"]
+    },
+    "WellWish": {
+      "title": "Well Wish",
+      "description": "A message from a guest to the couple",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "message", "createdAt"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "A question submitted by a guest",
+      "type": "object",
+      "properties": {
+        "question": { "type": "string" },
+        "userEmail": { "type": "string", "format": "email" },
+        "answer": { "type": "string" },
+        "isAnswered": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["question", "createdAt"]
+    },
+    "Gatekeeper": {
+      "title": "Gatekeeper",
+      "description": "A check-in staff email address authorized to perform scans at the wedding gates",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "addedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "createdAt"]
+    },
+    "SeatingTable": {
+      "title": "Seating Table",
+      "description": "Represents a physical table created for seating arrangements at a specific event",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name or number of the table" },
+        "eventId": { "type": "string", "description": "ID of the ceremony event this table is associated with" },
+        "capacity": { "type": "integer", "description": "Maximum number of seats available at this table" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "eventId", "capacity", "createdAt"]
+    },
+    "BroadcastNotification": {
+      "title": "Broadcast Notification",
+      "description": "System-wide and email notifications sent to passengers/guests for event updates and reminders",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["general", "reminder", "urgent"] },
+        "targetEvent": { "type": "string", "enum": ["all", "white", "traditional"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "message", "type", "targetEvent", "createdAt"]
+    },
+    "AsoEbiMaterial": {
+      "title": "Aso Ebi Material",
+      "description": "Represents a fabric or ensemble option offered to guests for purchase",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "string", "description": "Cost of the package (empty string for custom category pricing)" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "description", "createdAt"]
+    },
+    "GiftItem": {
+      "title": "Gift Item",
+      "description": "Represents an item in the wedding gift registry",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "buyUrl": { "type": "string" },
+        "price": { "type": "string" },
+        "description": { "type": "string" },
+        "isPurchased": { "type": "boolean" },
+        "purchasedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "imageUrl", "buyUrl", "isPurchased", "createdAt"]
+    },
+    "GalleryImage": {
+      "title": "Gallery Image",
+      "description": "Represents a photo in the wedding gallery",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "description": "The URL of the uploaded photo" },
+        "caption": { "type": "string", "description": "Optional text description for the photo" },
+        "order": { "type": "integer", "description": "Display order" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "createdAt"]
+    }
+  },
+  "firestore": {
+    "gallery": {
+      "schema": "GalleryImage",
+      "description": "Collection of wedding gallery photos"
+    },
+    "gifts": {
+      "schema": "GiftItem",
+      "description": "Collection of wedding registry gift items"
+    },
+    "asoEbiMaterials": {
+      "schema": "AsoEbiMaterial",
+      "description": "Collection of Aso Ebi materials available for purchase"
+    },
+    "guests": {
+      "schema": "Guest",
+      "description": "Collection of RSVPs and guest details"
+    },
+    "inviteCategories": {
+      "schema": "InviteCategory",
+      "description": "Groups of invited guests with passwords"
+    },
+    "events": {
+      "schema": "EventDetails",
+      "description": "Information about White and Traditional wedding events"
+    },
+    "wellWishes": {
+      "schema": "WellWish",
+      "description": "Public well wishes for the couple"
+    },
+    "qAndA": {
+      "schema": "Question",
+      "description": "Questions and answers for wedding updates"
+    },
+    "gatekeepers": {
+      "schema": "Gatekeeper",
+      "description": "Emails of check-in staff allowed to scan gate passes"
+    },
+    "seatingTables": {
+      "schema": "SeatingTable",
+      "description": "Tables created for seating arrangements, associated with specific events"
+    },
+    "broadcastNotifications": {
+      "schema": "BroadcastNotification",
+      "description": "Broadcast alerts and event reminders sent to invitees"
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { useReducedMotion } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
+import { useReducedMotion } from 'motion/react'
 import './PetalField.css'
 
 const PETAL_COLORS = ['#f4ddd8', '#e7b6b0', '#ecdcae', '#d8e0cb', '#fce9e6', '#f0c9c3']
@@ -29,6 +29,10 @@ function PetalShape({ color }) {
  */
 export default function PetalField({ count = 16, zIndex = 1 }) {
   const reduce = useReducedMotion()
+  // Client-only: petal positions use Math.random(); render nothing on the
+  // server so hydration matches.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const petals = useMemo(
     () =>
@@ -46,7 +50,7 @@ export default function PetalField({ count = 16, zIndex = 1 }) {
     [count],
   )
 
-  if (reduce) return null
+  if (reduce || !mounted) return null
 
   return (
     <div className="petal-field" style={{ zIndex }} aria-hidden="true">

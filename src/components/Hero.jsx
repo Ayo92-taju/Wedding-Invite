@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'motion/react'
 import { couple, wedding } from '../data/content.js'
 import Flower from './ui/Flower.jsx'
 import FloralDivider from './ui/FloralDivider.jsx'

@@ -1,0 +1,128 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ── Helpers ────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Couple / planner accounts that can manage the site + scan passes.
+    // ⚠️ UPDATE these to the real admin Google account email(s).
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email != null && (
+          request.auth.token.email.lower() == 'momohvictor62@gmail.com' ||
+          request.auth.token.email.lower() == 'ayolat16@gmail.com'
+        )) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isGatekeeper() {
+      return isSignedIn() && (
+        isAdmin() ||
+        (request.auth.token.email != null &&
+          exists(/databases/$(database)/documents/gatekeepers/$(request.auth.token.email.lower())))
+      );
+    }
+
+    // ── Validation ─────────────────────────────────────────────
+    // Single-event guest: attending (bool), plus optional party size / note.
+    function isValidGuest(data) {
+      return data.keys().hasAll(['name', 'email', 'attending', 'qrCode', 'createdAt'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 128
+        && data.email is string && data.email.size() > 0 && data.email.size() <= 128
+        && data.attending is bool
+        && data.qrCode is string && data.qrCode.size() > 0
+        && (!data.keys().hasAny(['guestsCount']) || data.guestsCount is int || data.guestsCount is float)
+        && (!data.keys().hasAny(['message']) || (data.message is string && data.message.size() <= 2000))
+        && (!data.keys().hasAny(['source']) || data.source is string)
+        && (!data.keys().hasAny(['checkedIn']) || data.checkedIn is bool)
+        && (!data.keys().hasAny(['checkinTime']) || data.checkinTime == null || data.checkinTime is string || data.checkinTime is timestamp);
+    }
+
+    function isValidWish(data) {
+      return data.keys().hasAll(['name', 'message', 'createdAt'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.message is string && data.message.size() > 0 && data.message.size() <= 1000;
+    }
+
+    function isValidQuestion(data) {
+      return data.keys().hasAll(['question', 'createdAt'])
+        && data.question is string && data.question.size() > 0 && data.question.size() <= 500
+        && (!data.keys().hasAny(['userEmail']) || data.userEmail is string)
+        && (!data.keys().hasAny(['answer']) || data.answer is string)
+        && (!data.keys().hasAny(['isAnswered']) || data.isAnswered is bool);
+    }
+
+    // ── Collections ────────────────────────────────────────────
+
+    // Guests — anyone may RSVP once (create); only the couple/gatekeepers may
+    // edit (used for check-in). Reads are open so a guest can find their pass.
+    match /guests/{guestId} {
+      allow get, list: if true;
+      allow create: if isValidGuest(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if (isAdmin() || isGatekeeper())
+        && isValidGuest(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+
+    // Well wishes / love notes — anyone may post; couple moderates.
+    match /wellWishes/{wishId} {
+      allow read: if true;
+      allow create: if isValidWish(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if isAdmin();
+    }
+
+    // Q & A — anyone may ask; couple answers.
+    match /qAndA/{questionId} {
+      allow read: if true;
+      allow create: if isValidQuestion(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if isAdmin();
+    }
+
+    // Public-read, admin-managed content.
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /gifts/{giftId} {
+      allow read: if true;
+      // Guests may only flip a gift to "purchased"; everything else is admin.
+      allow update: if isAdmin() ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isPurchased', 'purchasedBy']));
+      allow create, delete: if isAdmin();
+    }
+    match /gallery/{photoId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Admin-only infrastructure.
+    match /gatekeepers/{email} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /admins/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /seatingTables/{tableId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /broadcastNotifications/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

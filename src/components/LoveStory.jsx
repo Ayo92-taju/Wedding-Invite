@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useScroll, useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useReducedMotion } from 'motion/react'
 import SectionHeading from './ui/SectionHeading.jsx'
 import Reveal from './ui/Reveal.jsx'
 import Flower from './ui/Flower.jsx'

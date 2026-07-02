@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'motion/react'
 
 /*
  * Gentle scroll reveal — content drifts up and fades in as it enters view.

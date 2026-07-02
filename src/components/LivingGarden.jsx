@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import './LivingGarden.css'
 
 /*
@@ -10,6 +10,9 @@ import './LivingGarden.css'
  */
 export default function LivingGarden({ fireflyCount = 16 }) {
   const reduce = useReducedMotion()
+  // Fireflies use Math.random(); only render them after mount so SSR matches.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const { scrollYProgress } = useScroll()
 
   const dawnOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
@@ -40,7 +43,7 @@ export default function LivingGarden({ fireflyCount = 16 }) {
         <motion.div className="lg-layer lg-dusk" style={{ opacity: duskOpacity }} />
       </div>
 
-      {!reduce && (
+      {!reduce && mounted && (
         <motion.div className="lg-fireflies" style={{ opacity: fireflyOpacity }} aria-hidden="true">
           {fireflies.map((f) => (
             <span
