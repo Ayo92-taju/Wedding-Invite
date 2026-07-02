@@ -1,134 +1,122 @@
 # Nimi & Victor — *Love in Full Bloom* 🌸
 
-A luxury, interactive wedding website built as a romantic garden in full bloom: a
-cinematic petal-and-bloom intro, an invitation that unfolds like a pressed-flower
-letter, a growing garden timeline, a live countdown, a gift registry, a wall of
-handwritten "love notes," and an RSVP that seals into a personalised **floral QR
-entry pass**.
+A luxury, interactive wedding website: a cinematic grow‑and‑bloom intro, an
+invitation that unfolds like a pressed‑flower letter, a garden‑timeline love
+story, live countdown, gift registry, a wall of guest "love notes," and an RSVP
+that seals into a personalised **floral QR entry pass** — with a full backend for
+guest management, check‑in, and emails.
 
-Built with **React + Vite**, animated with **Framer Motion**, and deployed to
-**Netlify** (RSVP & Love Notes use free Netlify Forms; QR codes are generated in
-the browser).
+**Stack:** Next.js 16 (App Router) · Firebase (Firestore + Auth) · Resend (email)
+· Motion · qrcode.react / html5‑qrcode · Tailwind (admin only). The public site
+keeps its own hand‑built design system; components are `.jsx`, the backend bits
+are `.ts`.
 
 ---
 
-## 🌿 Quick start
+## 🌿 Getting started
 
 ```bash
-npm install      # install dependencies
-npm run dev      # start the dev server → http://localhost:5173
-npm run build    # build the production site into /dist
-npm run preview  # preview the production build locally
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npm start        # run the production build
 ```
 
 Requires Node 18+ (developed on Node 24).
 
----
+Environment variables live in **`.env.local`** (gitignored):
 
-## ✏️ Editing the content (the important bit)
+```
+RESEND_API_KEY=…          # Resend key — ⚠️ rotate the one from the old zip
+RESEND_FROM_EMAIL=…       # a verified Resend sender address
+NEXT_PUBLIC_SITE_URL=…    # live URL (used for OG/social image resolution)
+```
 
-**Almost everything you'll want to change lives in one file:**
-
-### [`src/data/content.js`](src/data/content.js)
-
-| Section | What you can edit |
-| --- | --- |
-| `couple` | Names, initials/monogram, tagline, intro line |
-| `wedding` | **Date & time** (`dateTimeISO` drives the countdown), venue, address, reception, dress code, invitation note |
-| `loveStory` | The milestones on the garden timeline (year, title, text) |
-| `letter` | The couple's handwritten note — salutation, paragraphs, closing, signature |
-| `registry` | Your "Garden of Gifts" — name, description and **link** per registry |
-| `loveNotes` | The intro line + a few starter notes shown on the wall |
-| `faqs` | The "Before you ask…" questions & answers |
-
-The placeholder text, date (`2026-10-10`), and venue ("The Glasshouse Garden") are
-**samples** — swap in the real details. The countdown, hero, invitation and footer
-all update automatically.
-
-> **Tip:** `dateTimeISO` must stay in the format `YYYY-MM-DDTHH:MM:SS` (24-hour,
-> local time), e.g. a 4 pm ceremony on 10 Oct 2026 → `2026-10-10T16:00:00`.
-
-### Photos
-
-This build is type- and illustration-led (no photography required). To add photos,
-drop images in `public/` and reference them as `/your-image.jpg`.
+The Firebase **web config** is in `firebase-applet-config.json` (public client
+config — safe to commit).
 
 ---
 
-## 🎨 Changing the look
+## ✏️ Editing content
 
-- **Colours & fonts** are CSS variables at the top of
-  [`src/styles/global.css`](src/styles/global.css) (`--cream`, `--blush`, `--sage`,
-  `--gold`, `--font-display`, etc.). Change them in one place and the whole site
-  follows.
-- **Fonts** are loaded in [`index.html`](index.html): *Fraunces* (display),
-  *EB Garamond* (body), *Pinyon Script* (the names). Swap the Google Fonts link and
-  the `--font-*` variables to restyle.
-- Each section has its own CSS file next to its component in `src/components/`.
+Static copy lives in one file: **[`src/data/content.js`](src/data/content.js)**
+— names, date/time/venue (the `dateTimeISO` drives the countdown), love‑story
+milestones, the couple's letter, registry items, FAQ, and the seed love notes.
 
----
-
-## 💌 How RSVP + the floral QR pass works
-
-- The **RSVP** and **Love Notes** forms post to **Netlify Forms**. Netlify detects
-  them via the hidden static forms in [`index.html`](index.html) — *don't remove those.*
-- On a successful RSVP, the guest's reply is "sealed" and a **personalised QR pass**
-  is generated **in the browser** (no backend). It encodes their name, party size
-  and a short code, and can be downloaded as a PNG ("Save your pass").
-- Submissions appear in your Netlify dashboard under **Forms** once deployed. Add
-  email/Slack notifications there if you'd like to be pinged on each RSVP.
-
-> Forms only work on the **deployed Netlify site** — in local dev the POST fails
-> silently and the ritual/pass still play so you can preview them.
+Some content is also **live from Firestore** (couple can change it without a
+deploy):
+- **Love notes** (`wellWishes`) — guests post; the wall shows them live. Falls
+  back to the seed notes in `content.js` until real ones exist.
+- **Registry** (`gifts`) — if the couple adds gift docs in Firestore they show
+  live (with a "reserve" action); otherwise the `content.js` items are used.
 
 ---
 
-## 🚀 Deploying to Netlify
+## 🔥 Backend (Firebase) — one required setup step
 
-1. Push this folder to a Git repo (GitHub/GitLab/Bitbucket).
-2. In Netlify: **Add new site → Import an existing project**, pick the repo.
-3. Netlify reads [`netlify.toml`](netlify.toml) automatically:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. Deploy. Your RSVP & Love Notes submissions will show under **Forms**.
+See **[`FIREBASE_SETUP.md`](FIREBASE_SETUP.md)** for the details. In short:
 
-(Drag-and-drop the `dist/` folder onto Netlify also works for a quick deploy, but a
-connected repo gives you auto-deploys and form detection.)
+1. **Publish the Firestore rules** in [`firestore.rules`](firestore.rules) to the
+   project's **`default`** named database (Console or `firebase deploy`). The
+   project's *current* rules enforce the previous two‑event schema, so **RSVPs
+   won't save until you publish these single‑event rules.**
+2. Set the **admin email(s)** in both `isAdmin()` (rules) and
+   [`src/lib/adminConfig.js`](src/lib/adminConfig.js).
+3. Enable **Google sign‑in** (Auth) for the admin dashboard.
+
+### What the backend does
+- **RSVP → Firestore** — a guest record (keyed by email) with a unique `qrCode`;
+  the floral pass encodes it. Create‑once; the couple/gatekeepers edit it for
+  check‑in.
+- **Emails (Resend)** — an automatic confirmation + pass on RSVP
+  (`/api/send-email`) and broadcast updates to all guests
+  (`/api/send-broadcast`). Both degrade gracefully if email is unavailable.
+- **Admin dashboard — `/admin`** — Google‑gated: RSVP overview, searchable guest
+  list, **QR check‑in scanner** (camera + manual entry), and a broadcast
+  composer.
 
 ---
 
-## ♿ Accessibility & performance notes
+## 🚀 Deploy
 
-- All animations honour `prefers-reduced-motion` (the intro shortens, petals,
-  butterflies and cursor petals switch off).
-- Decorative florals/butterflies are `aria-hidden`; the bloom intro is skippable
-  (tap, Enter or Esc).
-- Cursor-trailing petals are fine-pointer only (no battery drain on touch devices).
+**Netlify** (config in [`netlify.toml`](netlify.toml)): connect the repo; Netlify
+auto‑detects Next.js. Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and
+`NEXT_PUBLIC_SITE_URL` in the Netlify UI. Add your domain to Firebase Auth →
+Authorized domains.
+
+**Vercel** (Next‑native, also great): import the repo, add the same env vars.
 
 ---
 
-## 🗂 Project structure
+## 🗂 Structure
 
 ```
 src/
-  data/content.js        ← all editable content
-  styles/global.css      ← design tokens, base styles, form fields
-  lib/netlify.js         ← Netlify Forms helper
-  hooks/useCountdown.js  ← live countdown logic
-  components/
-    BloomIntro · LivingGarden · PetalField · Butterflies · CursorPetals  (intro + living ambience)
-    Nav · Hero · Invitation · LoveStory · Letter · WeddingDetails
-    Countdown · Registry · LoveNotes · Rsvp · Footer
-    ui/  Flower · Butterfly · FloralDivider · Reveal · SectionHeading
+  app/
+    layout.tsx · page.tsx        ← site shell + renders the App
+    admin/page.tsx               ← admin dashboard + QR check-in
+    api/send-email · send-broadcast ← Resend routes
+  App.jsx                        ← the public one-page site
+  components/                    ← BloomIntro, LivingGarden, Hero, Invitation,
+                                   LoveStory, Letter, Countdown, Registry,
+                                   LoveNotes, Rsvp, Footer, ambient + ui/
+  data/content.js                ← editable content
+  lib/     firebase · rsvp · email · admin · notes · gifts · adminConfig
+  utils/   getResendClient · emailTemplate
+  styles/global.css              ← design system (tokens, base, forms)
+firestore.rules · firebase.json  ← DB security rules + deploy target
+FIREBASE_SETUP.md                ← backend setup guide
 ```
 
 ---
 
-## ✅ To replace before going live
+## ✅ Go‑live checklist
 
-- [ ] Real names spelling, date/time, venue & address in `content.js`
-- [ ] Real love-story milestones, registry links, and the couple's letter (`letter` in `content.js`)
-- [ ] Replace `public/og-image.svg` with a 1200×630 **PNG** for best social previews
-- [ ] (Optional) set up Netlify form notifications
+- [ ] Real names, date/time, venue, story, registry links, letter in `content.js`
+- [ ] Publish `firestore.rules`; set admin email(s) in rules + `adminConfig.js`
+- [ ] Enable Google sign‑in; add the live domain to Firebase authorized domains
+- [ ] **Rotate the Resend API key** and set env vars on the host
+- [ ] Replace `public/og-image.svg` with a 1200×630 PNG for social previews
+- [ ] Delete any test data (a "Site Test" love note, test RSVPs) from Firestore
 
 Made with love, in full bloom. ❀

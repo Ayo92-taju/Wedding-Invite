@@ -1,38 +1,45 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import SectionHeading from './ui/SectionHeading.jsx'
 import Reveal from './ui/Reveal.jsx'
 import Flower from './ui/Flower.jsx'
 import { faqs, loveNotes } from '../data/content.js'
-import { submitToNetlify } from '../lib/netlify.js'
+import { onWellWishes, submitWellWish } from '../lib/notes.js'
 import './LoveNotes.css'
 
 export default function LoveNotes() {
-  const [notes, setNotes] = useState(loveNotes.seeds)
-  const [form, setForm] = useState({ name: '', message: '' })
+  // null = not loaded yet; then a live array from Firestore.
+  const [live, setLive] = useState(null)
+  const [form, setForm] = useState({ name: '', message: '', trap: '' })
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
 
-  // Stable gentle rotations so cards feel hand-placed (don't reshuffle on type).
+  useEffect(() => onWellWishes((list) => setLive(list), () => setLive([])), [])
+
+  // Show live notes once any exist, otherwise the gentle seed notes.
+  const wall = live && live.length ? live : loveNotes.seeds
+
   const rotations = useMemo(
-    () => notes.map((_, i) => ((i * 37) % 5) - 2 + (i % 2 ? 0.6 : -0.6)),
-    [notes],
+    () => wall.map((_, i) => ((i * 37) % 5) - 2 + (i % 2 ? 0.6 : -0.6)),
+    [wall],
   )
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (form.trap) return // honeypot: silently ignore bots
     if (!form.name.trim() || !form.message.trim()) return
     setBusy(true)
     const note = { name: form.name.trim(), message: form.message.trim() }
     try {
-      await submitToNetlify('love-notes', note)
-    } catch {
-      /* local dev / offline — still show the note optimistically */
+      await submitWellWish(note)
+      // The live subscription will surface the saved note.
+    } catch (err) {
+      console.warn('Love note save failed; showing it locally.', err)
+      setLive((prev) => [{ ...note, id: `local-${Date.now()}` }, ...(prev || [])])
     }
-    setNotes((prev) => [note, ...prev])
-    setForm({ name: '', message: '' })
+    setForm({ name: '', message: '', trap: '' })
     setSent(true)
     setBusy(false)
     window.setTimeout(() => setSent(false), 4000)
@@ -51,18 +58,11 @@ export default function LoveNotes() {
         <div className="notes__layout">
           {/* Compose */}
           <Reveal className="notes__compose">
-            <form
-              name="love-notes"
-              method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-              onSubmit={handleSubmit}
-              className="notes__form"
-            >
-              <input type="hidden" name="form-name" value="love-notes" />
-              <p className="notes__hidden">
+            <form onSubmit={handleSubmit} className="notes__form">
+              <p className="notes__hidden" aria-hidden="true">
                 <label>
-                  Don’t fill this out: <input name="bot-field" tabIndex={-1} autoComplete="off" />
+                  Don’t fill this out:
+                  <input name="trap" tabIndex={-1} autoComplete="off" value={form.trap} onChange={handleChange} />
                 </label>
               </p>
 
@@ -77,6 +77,7 @@ export default function LoveNotes() {
                   value={form.name}
                   onChange={handleChange}
                   placeholder="e.g. Aunty Bisi"
+                  maxLength={100}
                   required
                 />
               </label>
@@ -89,6 +90,7 @@ export default function LoveNotes() {
                   value={form.message}
                   onChange={handleChange}
                   rows={4}
+                  maxLength={1000}
                   placeholder="Press a little love into our story…"
                   required
                 />
@@ -116,10 +118,10 @@ export default function LoveNotes() {
           {/* Wall of notes */}
           <div className="notes__wall">
             <AnimatePresence initial={false}>
-              {notes.map((n, i) => (
+              {wall.map((n, i) => (
                 <motion.article
                   className="note-card"
-                  key={`${n.name}-${n.message.slice(0, 12)}-${i}`}
+                  key={n.id || `${n.name}-${i}`}
                   style={{ '--tilt': `${rotations[i] || 0}deg` }}
                   initial={{ opacity: 0, scale: 0.9, y: 12 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}

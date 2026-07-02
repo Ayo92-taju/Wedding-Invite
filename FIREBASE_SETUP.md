@@ -36,9 +36,32 @@ content and scan passes at the door (Phase 5). Re-publish the rules after editin
 
 ## 3. Enable sign-in + services (in the Firebase Console)
 
-- **Authentication → Sign-in method → Google**: enable it (used by the admin/
-  check-in screen in Phase 5).
+- **Authentication → Sign-in method → Google**: enable it (used by the admin /
+  check-in dashboard). Also add your production domain under **Authentication →
+  Settings → Authorized domains** (`localhost` is allowed by default).
 - **Firestore** and **Storage** are already in use by the previous project.
+
+## 4. The admin dashboard — `/admin`
+
+The couple/planner manage everything at **`/admin`**:
+- **Overview** — RSVP counts, total heads, checked-in.
+- **Guests** — searchable list, mark guests in/out.
+- **Check-in** — scan a guest's floral QR pass with the camera (or type the
+  code) and check them in at the door.
+- **Broadcast** — email an update to all attending guests (uses the Phase 4
+  Resend route).
+
+Access is gated in **two** places that must list the same admin email(s):
+1. `isAdmin()` in [`firestore.rules`](firestore.rules) — enforces write access
+   (check-in, deletes) and now the **guest-list read** (we tightened it so guest
+   emails aren't publicly enumerable; a guest can still fetch only their own pass
+   by email).
+2. `ADMIN_EMAILS` in [`src/lib/adminConfig.js`](src/lib/adminConfig.js) — gates
+   what the dashboard UI shows.
+
+Update **both** to the couple/planner's real Google account, then re-publish the
+rules. (Alternatively, add the admin's Firebase Auth UID to an `admins`
+collection — the rules also honour that.)
 
 ## What works today
 

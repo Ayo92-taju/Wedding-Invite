@@ -109,10 +109,6 @@ export default function Rsvp() {
             {step === 'form' && (
               <motion.form
                 key="form"
-                name="rsvp"
-                method="POST"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
                 className="rsvp__card rsvp__form"
                 onSubmit={submit}
                 initial={{ opacity: 0, y: 20 }}
@@ -120,13 +116,6 @@ export default function Rsvp() {
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
-                <input type="hidden" name="form-name" value="rsvp" />
-                <p className="rsvp__hidden">
-                  <label>
-                    Leave blank: <input name="bot-field" tabIndex={-1} autoComplete="off" />
-                  </label>
-                </p>
-
                 <div className="rsvp__row">
                   <label className="field">
                     <span className="field__label">Full name</span>

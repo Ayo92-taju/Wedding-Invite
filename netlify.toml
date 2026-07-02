@@ -1,0 +1,13 @@
+# Next.js on Netlify. Netlify auto-detects Next and uses the official runtime
+# (@netlify/plugin-nextjs) for SSR + the /api routes.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Set these in the Netlify UI (Site settings → Environment variables):
+#   RESEND_API_KEY       — your Resend key (rotate the one from the old zip!)
+#   RESEND_FROM_EMAIL    — a verified Resend sender, e.g. hello@yourdomain
+#   NEXT_PUBLIC_SITE_URL — the live URL, e.g. https://nimi-and-victor.example

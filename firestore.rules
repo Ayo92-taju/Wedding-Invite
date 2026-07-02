@@ -65,7 +65,8 @@ service cloud.firestore {
     // Guests — anyone may RSVP once (create); only the couple/gatekeepers may
     // edit (used for check-in). Reads are open so a guest can find their pass.
     match /guests/{guestId} {
-      allow get, list: if true;
+      allow get: if true;                          // a guest may fetch their own pass by email
+      allow list: if isAdmin() || isGatekeeper();  // only staff can browse/query the whole list
       allow create: if isValidGuest(request.resource.data)
         && request.resource.data.createdAt == request.time;
       allow update: if (isAdmin() || isGatekeeper())
