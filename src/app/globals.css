@@ -1,7 +1,129 @@
 @import 'tailwindcss';
 
-/*
- * Tailwind is loaded here for the admin dashboard. The public wedding site
- * uses its own design system in src/styles/global.css (imported in layout),
- * which intentionally loads AFTER this so its tokens win.
- */
+/* Class-based dark mode (toggled on <html> by the ThemeProvider). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-script: 'Great Vibes', cursive;
+
+  /* Wedding palette — "Love in Full Bloom" */
+  --color-bloom-cream: #fcf9f2;
+  --color-bloom-ivory: #fffdf9;
+  --color-bloom-blush: #e8cac3;
+  --color-bloom-rose: #c68b84;
+  --color-bloom-rose-dark: #9e5d57;
+  --color-bloom-sage: #8f9e8b;
+  --color-bloom-sage-dark: #5b6b57;
+  --color-bloom-gold: #c5a059;
+  --color-bloom-gold-light: #ead8b1;
+  --color-bloom-charcoal: #2a2c2b;
+
+  /* Twilight-garden dark variants */
+  --color-dark-garden: #111b15;
+  --color-dark-paper: #1b2b21;
+  --color-dark-sage: #4e604f;
+  --color-dark-rose: #a36962;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-bloom-charcoal);
+  background-color: var(--color-bloom-cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+.dark body {
+  color: var(--color-bloom-cream);
+  background-color: var(--color-dark-garden);
+}
+
+::selection {
+  background: var(--color-bloom-blush);
+  color: var(--color-bloom-rose-dark);
+}
+
+/* Thin gold scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.35);
+  border-radius: 10px;
+}
+
+/* ── Utilities from the concept ── */
+.paper-texture {
+  position: relative;
+}
+.paper-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #000 1px, transparent 1px),
+    radial-gradient(circle, #000 1px, transparent 1px);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+}
+.dark .paper-texture::before {
+  opacity: 0.05;
+  background-image: radial-gradient(circle, #fff 1px, transparent 1px),
+    radial-gradient(circle, #fff 1px, transparent 1px);
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    rgba(197, 160, 89, 0.1) 0%,
+    rgba(234, 216, 177, 0.4) 50%,
+    rgba(197, 160, 89, 0.1) 100%
+  );
+  background-size: 200% auto;
+  animation: goldShimmer 6s linear infinite;
+}
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.foil-gold {
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.05), inset 0 0 15px rgba(197, 160, 89, 0.05);
+}
+
+/* Text gold-foil gradient (for headings/accents). */
+.text-foil {
+  background: linear-gradient(100deg, #9c7c18, #c5a059 30%, #ead8b1 50%, #c5a059 70%, #9c7c18);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .shimmer-gold,
+  .text-foil {
+    animation: none;
+  }
+}

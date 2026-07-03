@@ -19,6 +19,8 @@ export const couple = {
   // A short, poetic line for the hero.
   intro:
     'A love that has grown gently, intentionally, and beautifully over time — like a garden nurtured with care.',
+  // Celebration hashtag.
+  hashtag: '#NimiAndVictor26',
 }
 
 export const wedding = {
