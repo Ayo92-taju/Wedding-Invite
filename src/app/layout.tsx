@@ -4,14 +4,14 @@ import { ThemeProvider, themeInitScript } from '@/components/theme/ThemeProvider
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'Nimi & Victor — Love in Full Bloom',
+  title: 'Nimi & Victor — The Three-Strand Cord',
   description:
-    'Nimi & Victor are getting married. Step into our garden in full bloom — our love story, the celebration details, and a gentle place to RSVP.',
+    'Nimi & Victor are getting married. Step into our garden — our love story, the celebration details, and a gentle place to RSVP.',
   icons: { icon: '/favicon.svg' },
   openGraph: {
     type: 'website',
-    title: 'Nimi & Victor — Love in Full Bloom',
-    description: 'Step into our garden in full bloom. Our love story, the details, and your invitation await.',
+    title: 'Nimi & Victor — The Three-Strand Cord',
+    description: 'Step into our garden. Our love story, the details, and your invitation await.',
     images: ['/og-image.svg'],
   },
 }

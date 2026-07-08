@@ -5,28 +5,8 @@ import { MapPin, Calendar, Clock, Wine, Sparkles, Heart } from 'lucide-react'
 import { couple, wedding } from '../data/content.js'
 
 const events = [
-  {
-    part: 'Part One',
-    label: wedding.ceremony.label,
-    Icon: Heart,
-    time: wedding.ceremony.time,
-    venue: wedding.ceremony.venue,
-    address: wedding.ceremony.address,
-    note: 'We will exchange our vows surrounded by blooms and the people we love most.',
-    footL: 'Ceremony',
-    footR: 'Garden Formal',
-  },
-  {
-    part: 'Part Two',
-    label: wedding.reception.label,
-    Icon: Wine,
-    time: wedding.reception.time,
-    venue: wedding.reception.venue,
-    address: wedding.reception.address,
-    note: 'Stay for an evening of dining, heartfelt toasts, and dancing among the flowers.',
-    footL: 'Reception',
-    footR: 'Dinner & Dancing',
-  },
+  { part: 'Part One', Icon: Heart, ...wedding.ceremony },
+  { part: 'Part Two', Icon: Wine, ...wedding.reception },
 ]
 
 export default function WeddingDetails() {
@@ -111,8 +91,8 @@ export default function WeddingDetails() {
               </div>
 
               <div className="pt-6 mt-6 border-t border-dashed border-bloom-gold/20 flex justify-between items-center text-xs text-bloom-gold">
-                <span className="font-cinzel">{ev.footL}</span>
-                <span className="font-serif italic">{ev.footR}</span>
+                <span className="font-cinzel">{ev.footLeft}</span>
+                <span className="font-serif italic">{ev.footRight}</span>
               </div>
             </motion.div>
           ))}
@@ -145,14 +125,13 @@ export default function WeddingDetails() {
               </p>
 
               <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
-                {wedding.dressCode.detail}. Dress to bloom alongside the garden — we cannot wait to
-                celebrate with you.
+                {wedding.dressCode.detail}
               </p>
             </div>
 
             <div className="pt-6 mt-6 border-t border-dashed border-bloom-gold/20 flex justify-between items-center text-xs text-bloom-gold">
               <span className="font-cinzel">Attire</span>
-              <span className="font-serif italic">{wedding.dressCode.text}</span>
+              <span className="font-serif italic">{wedding.dressCode.footRight}</span>
             </div>
           </motion.div>
         </div>

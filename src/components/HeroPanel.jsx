@@ -36,7 +36,7 @@ export default function HeroPanel() {
           className="space-y-2 md:space-y-4"
         >
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight text-bloom-charcoal dark:text-bloom-cream">
-            {couple.nameOne} &amp; {couple.nameTwo}
+            {couple.heroNameOne} &amp; {couple.nameTwo}
           </h1>
           <h2 className="font-script text-4xl md:text-5xl text-bloom-rose mt-2 tracking-wide">{couple.tagline}</h2>
         </motion.div>

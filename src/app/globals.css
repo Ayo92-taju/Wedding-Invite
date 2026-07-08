@@ -21,11 +21,13 @@
   --color-bloom-gold-light: #ead8b1;
   --color-bloom-charcoal: #2a2c2b;
 
-  /* Twilight-garden dark variants */
+  /* Twilight-garden dark variants — a night garden touched with burgundy */
   --color-dark-garden: #111b15;
-  --color-dark-paper: #1b2b21;
+  --color-dark-paper: #1e2620;
   --color-dark-sage: #4e604f;
   --color-dark-rose: #a36962;
+  --color-dark-burgundy: #5a1a2b;
+  --color-dark-wine: #3a1019;
 }
 
 html {
@@ -44,6 +46,13 @@ body {
 .dark body {
   color: var(--color-bloom-cream);
   background-color: var(--color-dark-garden);
+  /* Deep green garden at night, washed with a little burgundy. */
+  background-image:
+    radial-gradient(105% 60% at 50% 0%, rgba(122, 33, 57, 0.6) 0%, transparent 60%),
+    radial-gradient(85% 65% at 100% 100%, rgba(90, 24, 44, 0.5) 0%, transparent 55%),
+    radial-gradient(80% 60% at 0% 92%, rgba(58, 16, 25, 0.38) 0%, transparent 55%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 ::selection {

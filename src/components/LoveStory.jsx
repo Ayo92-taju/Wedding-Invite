@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { loveStory } from '../data/content.js'
+import { loveStory, loveStoryLede } from '../data/content.js'
 
 /* Each milestone blooms one stage further along the garden stem.
    Stages + accent colours are derived by position so content.js stays clean. */
@@ -63,6 +63,9 @@ export default function LoveStory() {
             Love Story Garden
           </h2>
           <div className="w-12 h-px bg-bloom-gold/40 mx-auto mt-4" />
+          <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage max-w-md mx-auto mt-6">
+            {loveStoryLede}
+          </p>
         </motion.div>
 
         {/* Central vertical stem */}
@@ -76,8 +79,11 @@ export default function LoveStory() {
         <div className="space-y-16 md:space-y-24">
           {loveStory.map((event, idx) => {
             const isEven = idx % 2 === 0
-            const stage = STAGES[idx % STAGES.length]
-            const color = COLORS[idx % COLORS.length]
+            // Progress along the timeline (0 → 1) so the last milestone always
+            // reaches full bloom, whatever the number of entries.
+            const ratio = loveStory.length > 1 ? idx / (loveStory.length - 1) : 1
+            const stage = STAGES[Math.round(ratio * (STAGES.length - 1))]
+            const color = COLORS[Math.round(ratio * (COLORS.length - 1))]
 
             return (
               <div

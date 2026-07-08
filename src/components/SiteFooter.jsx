@@ -1,6 +1,6 @@
 'use client'
 
-import { couple, wedding, credit } from '../data/content.js'
+import { couple, wedding } from '../data/content.js'
 
 export default function SiteFooter() {
   return (
@@ -29,7 +29,7 @@ export default function SiteFooter() {
             {couple.hashtag}
           </p>
           <p className="font-serif text-[10px] text-bloom-sage-dark dark:text-bloom-sage/50">
-            {wedding.dayShort} &bull; {couple.tagline} &bull; {credit}
+            {wedding.dayShort} &bull; {couple.tagline}
           </p>
         </div>
       </div>

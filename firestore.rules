@@ -11,8 +11,9 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Couple / planner accounts that can manage the site + scan passes.
-    // ⚠️ UPDATE these to the real admin Google account email(s).
+    // Couple / planner accounts that manage the site + guest list.
+    // ⚠️ UPDATE these to the real admin Google account email(s), and keep them
+    //    in sync with src/lib/adminConfig.js.
     function isAdmin() {
       return isSignedIn() && (
         (request.auth.token.email != null && (
@@ -23,27 +24,18 @@ service cloud.firestore {
       );
     }
 
-    function isGatekeeper() {
-      return isSignedIn() && (
-        isAdmin() ||
-        (request.auth.token.email != null &&
-          exists(/databases/$(database)/documents/gatekeepers/$(request.auth.token.email.lower())))
-      );
+    // Ushers/gate staff — a signed-in Google account whitelisted for scanning.
+    function isScanner() {
+      return isSignedIn() && request.auth.token.email != null &&
+        exists(/databases/$(database)/documents/authorized_scanners/$(request.auth.token.email.lower()));
     }
 
-    // ── Validation ─────────────────────────────────────────────
-    // Single-event guest: attending (bool), plus optional party size / note.
-    function isValidGuest(data) {
-      return data.keys().hasAll(['name', 'email', 'attending', 'qrCode', 'createdAt'])
-        && data.name is string && data.name.size() > 0 && data.name.size() <= 128
-        && data.email is string && data.email.size() > 0 && data.email.size() <= 128
-        && data.attending is bool
-        && data.qrCode is string && data.qrCode.size() > 0
-        && (!data.keys().hasAny(['guestsCount']) || data.guestsCount is int || data.guestsCount is float)
-        && (!data.keys().hasAny(['message']) || (data.message is string && data.message.size() <= 2000))
-        && (!data.keys().hasAny(['source']) || data.source is string)
-        && (!data.keys().hasAny(['checkedIn']) || data.checkedIn is bool)
-        && (!data.keys().hasAny(['checkinTime']) || data.checkinTime == null || data.checkinTime is string || data.checkinTime is timestamp);
+    // A guest update that only flips the three check-in fields, and only ever
+    // ON (a used pass can never be reset by a scanner).
+    function onlyCheckin() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['checkedIn', 'checkedInAt', 'checkedInBy'])
+        && request.resource.data.checkedIn == true;
     }
 
     function isValidWish(data) {
@@ -52,28 +44,37 @@ service cloud.firestore {
         && data.message is string && data.message.size() > 0 && data.message.size() <= 1000;
     }
 
-    function isValidQuestion(data) {
-      return data.keys().hasAll(['question', 'createdAt'])
-        && data.question is string && data.question.size() > 0 && data.question.size() <= 500
-        && (!data.keys().hasAny(['userEmail']) || data.userEmail is string)
-        && (!data.keys().hasAny(['answer']) || data.answer is string)
-        && (!data.keys().hasAny(['isAnswered']) || data.isAnswered is bool);
+    // ── Access-control system (parties · guests · tables · scanners) ──
+
+    // A household/invitation. Guest-facing reads happen through a verified
+    // session/Cloud Function (Phase C), so direct client reads are admin-only.
+    match /parties/{partyId} {
+      allow read, write: if isAdmin();
     }
 
-    // ── Collections ────────────────────────────────────────────
-
-    // Guests — anyone may RSVP once (create); only the couple/gatekeepers may
-    // edit (used for check-in). Reads are open so a guest can find their pass.
-    match /guests/{guestId} {
-      allow get: if true;                          // a guest may fetch their own pass by email
-      allow list: if isAdmin() || isGatekeeper();  // only staff can browse/query the whole list
-      allow create: if isValidGuest(request.resource.data)
-        && request.resource.data.createdAt == request.time;
-      allow update: if (isAdmin() || isGatekeeper())
-        && isValidGuest(request.resource.data)
-        && request.resource.data.createdAt == resource.data.createdAt;
-      allow delete: if isAdmin();
+    // Individual attendees. Doc id = inviteCode (the QR value).
+    match /guests/{inviteCode} {
+      allow get, list: if isAdmin();               // admin browses the whole list
+      allow get: if isScanner();                   // usher reads one pass to check in
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (isScanner() && onlyCheckin());
     }
+
+    // Seating. Ushers read table names to display on a valid scan.
+    match /tables/{tableId} {
+      allow read: if isAdmin() || isScanner();
+      allow write: if isAdmin();
+    }
+
+    // Gate whitelist. A signed-in user may read only their OWN scanner doc
+    // (to learn they're authorized); the couple manages the list.
+    match /authorized_scanners/{email} {
+      allow get: if isSignedIn() && request.auth.token.email != null
+        && request.auth.token.email.lower() == email;
+      allow list, write: if isAdmin();
+    }
+
+    // ── Public marketing site ──────────────────────────────────
 
     // Well wishes / love notes — anyone may post; couple moderates.
     match /wellWishes/{wishId} {
@@ -83,22 +84,9 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // Q & A — anyone may ask; couple answers.
-    match /qAndA/{questionId} {
-      allow read: if true;
-      allow create: if isValidQuestion(request.resource.data)
-        && request.resource.data.createdAt == request.time;
-      allow update, delete: if isAdmin();
-    }
-
     // Public-read, admin-managed content.
-    match /events/{eventId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
     match /gifts/{giftId} {
       allow read: if true;
-      // Guests may only flip a gift to "purchased"; everything else is admin.
       allow update: if isAdmin() ||
         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isPurchased', 'purchasedBy']));
       allow create, delete: if isAdmin();
@@ -108,21 +96,9 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Admin-only infrastructure.
-    match /gatekeepers/{email} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
-    }
+    // Admin infrastructure.
     match /admins/{uid} {
       allow read: if isSignedIn();
-      allow write: if isAdmin();
-    }
-    match /seatingTables/{tableId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    match /broadcastNotifications/{id} {
-      allow read: if true;
       allow write: if isAdmin();
     }
   }

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { QRCodeCanvas } from 'qrcode.react'
-import { Gift, Sparkles, Check, Download, RotateCcw } from 'lucide-react'
+import { Check, Download, RotateCcw } from 'lucide-react'
 import { couple, wedding } from '../data/content.js'
 import { submitRsvp, shortCode } from '../lib/rsvp.js'
 import { sendRsvpConfirmation } from '../lib/email.js'
@@ -20,24 +20,16 @@ function codeFor(name, guests) {
   return `NV-${h.toString(36).toUpperCase().padStart(6, '0').slice(0, 6)}`
 }
 
-const RITUAL_LABEL = { 'wax-seal': 'Wax Seal', 'flower-press': 'Flower Press', 'ribbon-tie': 'Ribbon Tie' }
-
 const empty = { name: '', email: '', attending: '', guestsCount: 1, dietaryNotes: '', message: '' }
 
 export default function RsvpSection() {
   const reduce = useReducedMotion()
-  const [ritual, setRitual] = useState(null)
-  const [formStep, setFormStep] = useState('ritual') // ritual · form · animating · pass
+  const [formStep, setFormStep] = useState('form') // form · animating · pass
   const [rsvp, setRsvp] = useState(empty)
   const [isDeclining, setIsDeclining] = useState(false)
   const [passCode, setPassCode] = useState('')
   const [saveError, setSaveError] = useState(false)
   const passRef = useRef(null)
-
-  const selectRitual = (type) => {
-    setRitual(type)
-    setFormStep('form')
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -99,11 +91,10 @@ export default function RsvpSection() {
 
   const handleReset = () => {
     setRsvp(empty)
-    setRitual(null)
     setIsDeclining(false)
     setPassCode('')
     setSaveError(false)
-    setFormStep('ritual')
+    setFormStep('form')
   }
 
   return (
@@ -132,51 +123,7 @@ export default function RsvpSection() {
 
         <div className="w-full bg-bloom-cream/50 dark:bg-dark-garden/40 rounded-3xl border border-bloom-gold/20 p-6 md:p-10 shadow-lg min-h-[420px] flex flex-col justify-center">
           <AnimatePresence mode="wait">
-            {/* STEP 1: RITUAL CHOICE */}
-            {formStep === 'ritual' && (
-              <motion.div
-                key="ritual-step"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-6"
-              >
-                <p className="font-serif italic text-bloom-sage-dark dark:text-bloom-sage text-base max-w-lg mx-auto leading-relaxed">
-                  Before confirming your presence, choose a gentle sealing ritual — we&apos;ll press your
-                  reply with it and craft your floral entry pass.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-                  {[
-                    { type: 'wax-seal', Icon: Sparkles, bg: 'bg-bloom-rose/10 text-bloom-rose group-hover:bg-bloom-rose', title: 'Wax Seal', copy: 'Press your RSVP with hot rose wax and gold foil' },
-                    { type: 'flower-press', Icon: Check, bg: 'bg-bloom-sage/10 text-bloom-sage group-hover:bg-bloom-sage', title: 'Press a Flower', copy: 'Press a fresh field blossom into handmade paper' },
-                    { type: 'ribbon-tie', Icon: Gift, bg: 'bg-bloom-gold/10 text-bloom-gold group-hover:bg-bloom-gold', title: 'Ribbon Tie', copy: 'Tie a luxurious silk ribbon around the letter' },
-                  ].map(({ type, Icon, bg, title, copy }) => (
-                    <motion.button
-                      key={type}
-                      type="button"
-                      whileHover={{ scale: 1.03, y: -4 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => selectRitual(type)}
-                      className="p-6 bg-bloom-ivory dark:bg-dark-paper border border-bloom-gold/20 hover:border-bloom-gold rounded-2xl cursor-pointer text-center group flex flex-col items-center justify-center space-y-3"
-                    >
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center group-hover:text-bloom-ivory transition-colors ${bg}`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-cinzel text-xs tracking-wider uppercase text-bloom-charcoal dark:text-bloom-cream">
-                        {title}
-                      </h3>
-                      <p className="font-serif text-[11px] italic text-bloom-sage-dark dark:text-bloom-sage leading-relaxed">
-                        {copy}
-                      </p>
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 2: FORM */}
+            {/* STEP 1: FORM */}
             {formStep === 'form' && (
               <motion.form
                 key="form-step"
@@ -187,13 +134,10 @@ export default function RsvpSection() {
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
-                <button
-                  type="button"
-                  onClick={() => setFormStep('ritual')}
-                  className="font-serif text-xs italic text-bloom-sage-dark hover:text-bloom-rose flex items-center gap-1 cursor-pointer"
-                >
-                  &larr; Change sealing ritual ({RITUAL_LABEL[ritual]})
-                </button>
+                <p className="font-serif italic text-bloom-sage-dark dark:text-bloom-sage text-sm text-center max-w-lg mx-auto leading-relaxed">
+                  Confirm your presence below — we&apos;ll press your reply with a wax seal and craft your
+                  floral entry pass.
+                </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-1">
@@ -324,7 +268,7 @@ export default function RsvpSection() {
               </motion.form>
             )}
 
-            {/* STEP 3: ANIMATING RITUAL */}
+            {/* STEP 2: ANIMATING WAX SEAL */}
             {formStep === 'animating' && (
               <motion.div
                 key="animating-step"
@@ -333,62 +277,26 @@ export default function RsvpSection() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-center justify-center text-center space-y-6 py-10"
               >
-                {ritual === 'wax-seal' && (
-                  <div className="relative w-32 h-32 flex items-center justify-center">
-                    <motion.div
-                      initial={{ scale: 0.1, opacity: 0 }}
-                      animate={{ scale: [0.1, 1.2, 1], opacity: 0.9 }}
-                      transition={{ duration: 1.5, ease: 'easeOut' }}
-                      className="absolute w-20 h-20 rounded-full bg-bloom-rose blur-xs"
-                    />
-                    <motion.div
-                      initial={{ y: -80, opacity: 0 }}
-                      animate={{ y: [-80, 0, -5, 0], opacity: [0, 1, 1, 1] }}
-                      transition={{ delay: 0.8, duration: 1, ease: 'easeOut' }}
-                      className="relative z-10 w-16 h-16 bg-bloom-gold text-bloom-ivory rounded-full flex items-center justify-center shadow-xl border border-bloom-gold-light"
-                    >
-                      <span className="font-script text-2xl">{couple.initials?.replace(/\s|&/g, '') || 'NV'}</span>
-                    </motion.div>
-                  </div>
-                )}
-
-                {ritual === 'flower-press' && (
-                  <div className="relative w-32 h-32 flex items-center justify-center">
-                    <div className="absolute w-24 h-24 bg-bloom-ivory dark:bg-dark-paper border border-bloom-gold/20 rounded-lg shadow-inner" />
-                    <motion.div
-                      initial={{ y: -50, rotate: 0, opacity: 0 }}
-                      animate={{ y: 0, rotate: 145, opacity: 1 }}
-                      transition={{ duration: 1, ease: 'easeOut' }}
-                      className="absolute text-bloom-rose"
-                    >
-                      <svg viewBox="0 0 100 100" fill="currentColor" className="w-12 h-12">
-                        <path d="M50 10 C60 30, 80 30, 50 60 C20 30, 40 30, 50 10 Z" />
-                      </svg>
-                    </motion.div>
-                  </div>
-                )}
-
-                {ritual === 'ribbon-tie' && (
-                  <div className="relative w-32 h-32 flex items-center justify-center">
-                    <svg viewBox="0 0 100 100" className="w-24 h-24 text-bloom-rose">
-                      <motion.path
-                        d="M10 50 Q30 20 50 50 Q70 20 90 50 Q75 80 50 50 Q25 80 10 50 Z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.6, ease: 'easeInOut' }}
-                      />
-                      <motion.circle cx="50" cy="50" r="6" fill="#C5A059" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} />
-                    </svg>
-                  </div>
-                )}
+                <div className="relative w-32 h-32 flex items-center justify-center">
+                  <motion.div
+                    initial={{ scale: 0.1, opacity: 0 }}
+                    animate={{ scale: [0.1, 1.2, 1], opacity: 0.9 }}
+                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                    className="absolute w-20 h-20 rounded-full bg-bloom-rose blur-xs"
+                  />
+                  <motion.div
+                    initial={{ y: -80, opacity: 0 }}
+                    animate={{ y: [-80, 0, -5, 0], opacity: [0, 1, 1, 1] }}
+                    transition={{ delay: 0.8, duration: 1, ease: 'easeOut' }}
+                    className="relative z-10 w-16 h-16 bg-bloom-gold text-bloom-ivory rounded-full flex items-center justify-center shadow-xl border border-bloom-gold-light"
+                  >
+                    <span className="font-script text-2xl">{couple.initials?.replace(/\s|&/g, '') || 'NV'}</span>
+                  </motion.div>
+                </div>
 
                 <div className="space-y-2">
                   <h3 className="font-cinzel text-xs tracking-[0.25em] uppercase text-bloom-gold">
-                    Pressing your flower…
+                    Pressing the wax seal…
                   </h3>
                   <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage">
                     Sealing your reply into the garden.

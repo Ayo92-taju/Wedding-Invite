@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
-import { couple, wedding } from '../data/content.js'
+import { wedding } from '../data/content.js'
 
 export default function CountdownTimer() {
   const weddingDate = new Date(wedding.dateTimeISO).getTime()
@@ -70,7 +70,7 @@ export default function CountdownTimer() {
           </div>
 
           <p className="font-serif italic text-xs md:text-sm text-bloom-sage-dark dark:text-bloom-sage/80 pt-4">
-            Until {couple.nameOne} &amp; {couple.nameTwo} say &ldquo;I do&rdquo; at {wedding.ceremony.venue}.
+            {wedding.countdownNote}
           </p>
         </motion.div>
       </div>
