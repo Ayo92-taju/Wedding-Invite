@@ -33,6 +33,16 @@ const HEADER_ALIASES = {
   'seat count': 'seats',
   'number of seats': 'seats',
   'no of seats': 'seats',
+  // Optional columns
+  'plus one names': 'plusOnes',
+  'plus ones': 'plusOnes',
+  'plus one': 'plusOnes',
+  companions: 'plusOnes',
+  'party name': 'partyName',
+  household: 'partyName',
+  notes: 'notes',
+  note: 'notes',
+  remarks: 'notes',
 }
 
 export function normalizeHeader(h) {
@@ -75,14 +85,28 @@ export function buildImportPlan(rows, opts = {}) {
       warnings.push(`Row ${rowNo} (${fullName}): phone “${rawPhone}” couldn’t be normalised.`)
     }
     const email = String(rec.email ?? '').trim().toLowerCase()
+    const notes = String(rec.notes ?? '').trim()
+
+    // Optional: names of the companions, when known up front.
+    const plusOnes = String(rec.plusOnes ?? '')
+      .split(/[,;]/)
+      .map((n) => n.trim())
+      .filter(Boolean)
 
     const seatsRaw = String(rec.seats ?? '').trim()
     let seats = Math.floor(Number(rec.seats))
     if (!Number.isFinite(seats) || seats < 1) {
       if (seatsRaw) warnings.push(`Row ${rowNo} (${fullName}): seats “${seatsRaw}” invalid — defaulted to 1.`)
-      seats = 1
+      // Infer the seat count from the companion names, if given.
+      seats = plusOnes.length ? plusOnes.length + 1 : 1
     } else if (seats > 20) {
       warnings.push(`Row ${rowNo} (${fullName}): ${seats} seats — unusually large, please confirm.`)
+    }
+
+    if (plusOnes.length > seats - 1) {
+      warnings.push(
+        `Row ${rowNo} (${fullName}): ${plusOnes.length} companion name(s) but only ${seats - 1} extra seat(s) — extras ignored.`,
+      )
     }
 
     const partyId = randomId('pty')
@@ -94,6 +118,7 @@ export function buildImportPlan(rows, opts = {}) {
         fullName,
         phone,
         email,
+        notes,
         rsvpStatus: 'PENDING',
         tableId: null,
         checkedIn: false,
@@ -102,13 +127,19 @@ export function buildImportPlan(rows, opts = {}) {
       },
     ]
     for (let i = 1; i < seats; i += 1) {
+      const companion = plusOnes[i - 1]
       guests.push({
-        inviteCode: makeInviteCode(fullName, taken),
+        // A named companion gets a code from their own initials; an unnamed
+        // placeholder inherits the primary's, so it groups with their party.
+        inviteCode: makeInviteCode(companion || fullName, taken),
         partyId,
         isPrimary: false,
-        fullName: `Guest of ${fullName}`,
+        // A named companion when we know them, otherwise a placeholder the
+        // primary guest fills in at RSVP.
+        fullName: companion || `Guest of ${fullName}`,
         phone: '',
         email: '',
+        notes: '',
         rsvpStatus: 'PENDING',
         tableId: null,
         checkedIn: false,
@@ -121,7 +152,7 @@ export function buildImportPlan(rows, opts = {}) {
     parties.push({
       partyId,
       party: {
-        partyName: seats > 1 ? `${fullName} & Party` : fullName,
+        partyName: String(rec.partyName ?? '').trim() || (seats > 1 ? `${fullName} & Party` : fullName),
         primaryContactPhone: phone,
         primaryContactEmail: email,
         allowedSeats: seats,

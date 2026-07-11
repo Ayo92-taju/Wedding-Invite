@@ -1,9 +1,18 @@
 # Digital Invitation & Venue Access Control System — Build Plan
 
-**Status:** Proposed — awaiting client/owner approval before implementation.
+**Status: BUILT (2026‑07‑12) — pending user setup to go live.**
+Phase A ✅ (model + rules + import + admin) · Phase B ✅ (client‑side QR + Ivory Garden pass;
+Storage upload deferred to Blaze) · Phase C ✅ (portal via server API; needs
+`FIREBASE_SERVICE_ACCOUNT_KEY`) · Phase D ✅ (/scan: transactional check‑in, offline queue;
+camera untestable in dev sandbox — test on a phone) · Phase E ⏳ (Twilio — awaiting credentials;
+email broadcast/confirmations already work via Resend) · Phase F ✅ (tables + capacity‑aware
+assignment + live metrics in /admin).
+**To go live:** deploy `firestore.rules`, set `FIREBASE_SERVICE_ACCOUNT_KEY`, rotate Resend key,
+import the guest sheet. See `FIREBASE_SETUP.md`.
+
 **Author:** Prepared from the client TRD (`Website Adjustments.docx`, 2026‑07‑08).
 **Decision locked in:** the new party/verification portal **replaces** the current public
-wax‑seal RSVP. The current simple `guests` (one‑doc‑per‑email, create‑once) model is retired.
+wax‑seal RSVP. The old simple `guests` (one‑doc‑per‑email, create‑once) model is retired.
 
 ---
 

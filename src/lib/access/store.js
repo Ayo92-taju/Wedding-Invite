@@ -13,6 +13,7 @@ import {
   writeBatch,
   updateDoc,
   addDoc,
+  setDoc,
   getDocs,
 } from 'firebase/firestore'
 import { db } from '../firebase.js'
@@ -20,6 +21,7 @@ import { db } from '../firebase.js'
 const PARTIES = 'parties'
 const GUESTS = 'guests'
 const TABLES = 'tables'
+const SCANNERS = 'authorized_scanners'
 
 const MAX_BATCH = 450 // Firestore hard limit is 500 ops per batch
 
@@ -57,6 +59,15 @@ export async function updateGuest(id, patch) {
   await updateDoc(doc(db, GUESTS, id), patch)
 }
 
+/* Admin-side manual check-in/undo (ushers use the transactional /scan flow). */
+export async function setGuestCheckedIn(id, value, byEmail) {
+  await updateDoc(doc(db, GUESTS, id), {
+    checkedIn: !!value,
+    checkedInAt: value ? serverTimestamp() : null,
+    checkedInBy: value ? String(byEmail || 'admin') : null,
+  })
+}
+
 export async function deleteGuests(ids) {
   for (let i = 0; i < ids.length; i += MAX_BATCH) {
     const batch = writeBatch(db)
@@ -84,6 +95,27 @@ export async function wipeGuestsAndParties() {
     await batch.commit()
   }
   return refs.length
+}
+
+/* ── Gate scanners (whitelisted usher Google accounts) ──────── */
+export function onScanners(next, onError) {
+  return onSnapshot(collection(db, SCANNERS), (s) => next(s.docs.map((d) => ({ id: d.id, ...d.data() }))), onError)
+}
+
+export async function addScanner(email, assignedGate) {
+  const id = String(email || '').trim().toLowerCase()
+  if (!id.includes('@')) throw new Error('Enter the usher’s Google email address.')
+  await setDoc(doc(db, SCANNERS, id), {
+    role: 'scanner',
+    assignedGate: String(assignedGate || '').trim() || 'Main Entrance',
+    addedAt: serverTimestamp(),
+  })
+}
+
+export async function removeScanner(id) {
+  const batch = writeBatch(db)
+  batch.delete(doc(db, SCANNERS, id))
+  await batch.commit()
 }
 
 /* ── Tables ─────────────────────────────────────────────────── */

@@ -12,8 +12,8 @@ service cloud.firestore {
     }
 
     // Couple / planner accounts that manage the site + guest list.
-    // ⚠️ UPDATE these to the real admin Google account email(s), and keep them
-    //    in sync with src/lib/adminConfig.js.
+    // Confirmed by the couple (2026-07-10). Keep in sync with src/lib/adminConfig.js.
+    // Compared lower-cased, so any capitalisation of the sign-in email matches.
     function isAdmin() {
       return isSignedIn() && (
         (request.auth.token.email != null && (
