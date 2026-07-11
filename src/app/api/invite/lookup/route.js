@@ -7,8 +7,8 @@ export const runtime = 'nodejs'
 /*
  * Guest verification: a guest enters the phone number or email their invite
  * was registered with; we return their whole party (household) so the primary
- * can confirm who is attending. Matches the TRD's "instant entry" flow — an
- * SMS OTP can be layered on in Phase E.
+ * can confirm who is attending. "Instant entry" (knowing the invited contact)
+ * is the decided verification level — SMS OTP was considered and dropped.
  *
  * Contact details of party members are never echoed back.
  */

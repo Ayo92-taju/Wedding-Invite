@@ -35,7 +35,7 @@ Three tightly‑sequenced pipelines: **Admin import → Guest RSVP/claim → Gat
 |---|---|---|
 | Frontend/API | **Next.js** (existing app) on Vercel | New routes: `/verify`, `/rsvp`, `/scan`, expanded `/admin` |
 | Database | **Firestore** (existing named db `default`) | 4 new collections (below) |
-| Auth | **Firebase Auth** | Google Sign‑In for admin+ushers; lightweight token/OTP session for guests |
+| Auth | **Firebase Auth** | Google Sign‑In for admin+ushers; guests verify by invited phone/email ("instant entry" — OTP dropped by decision, 2026‑07‑12) |
 | Server logic | **Cloud Functions** (or Next API routes) | Invite‑card render, messaging dispatch, CSV processing |
 | Asset storage | **Firebase Storage** | Generated QR + invite‑card PNGs |
 | Messaging | **Termii** (recommended for NG) or Twilio | WhatsApp/SMS — provider decision pending (§8) |
