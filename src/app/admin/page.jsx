@@ -249,6 +249,23 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
     setBusy('')
   }
 
+  const resend = async (g) => {
+    setBusy(`send-${g.id}`)
+    setErr('')
+    try {
+      const res = await fetch('/api/dispatch-pass', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inviteCode: g.inviteCode }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) setErr(data?.error || 'Dispatch failed.')
+      else if (data.sent) setErr(`✓ Passes sent to ${data.to} via ${data.channel}.`)
+      else setErr(data?.error || 'Twilio sender not configured yet — add TWILIO_WHATSAPP_FROM or TWILIO_SMS_FROM.')
+    } catch (e) { setErr(e?.message || 'Dispatch failed.') }
+    setBusy('')
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -347,8 +364,8 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                       {busy === g.id ? 'Making…' : 'Save pass'}
                     </button>
                     <span className="text-bloom-gold/40 mx-1.5">·</span>
-                    <button onClick={() => window.alert('Notification dispatch arrives with Twilio (Phase E).')} className="text-[11px] text-bloom-rose underline cursor-pointer">
-                      Re-send
+                    <button onClick={() => resend(g)} disabled={busy === `send-${g.id}`} className="text-[11px] text-bloom-rose underline cursor-pointer disabled:opacity-50">
+                      {busy === `send-${g.id}` ? 'Sending…' : 'Send passes'}
                     </button>
                   </td>
                 </tr>

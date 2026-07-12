@@ -3,6 +3,7 @@ import { FieldValue } from 'firebase-admin/firestore'
 import { getAdminDb } from '@/lib/server/adminDb.js'
 import getResendClient from '@/utils/getResendClient'
 import { partyConfirmationEmail } from '@/utils/emailTemplate'
+import { sendGuestMessage, passMessage } from '@/lib/server/twilio.js'
 import { couple } from '@/data/content'
 
 export const runtime = 'nodejs'
@@ -66,6 +67,7 @@ export async function POST(request) {
     const confirmed = []
     let primaryName = ''
     let primaryEmail = ''
+    let primaryPhone = ''
 
     for (const m of members) {
       const code = String(m?.code || '').trim()
@@ -76,6 +78,7 @@ export async function POST(request) {
       const { ref, data } = entry
       const attending = !!m.attending
       const patch = { rsvpStatus: attending ? 'CONFIRMED' : 'DECLINED' }
+      if (data.isPrimary) primaryPhone = data.phone || ''
 
       // Placeholder / companion names may be (re)named by the primary guest.
       const newName = String(m?.fullName || '').trim().slice(0, 120)
@@ -132,9 +135,22 @@ export async function POST(request) {
       }
     }
 
+    // WhatsApp/SMS the passes to the primary's phone (fire-and-forget).
+    let messaged = false
+    if (confirmed.length > 0 && primaryPhone) {
+      try {
+        const partyName = partyDoc.data().partyName || primaryName || 'your party'
+        const r = await sendGuestMessage(primaryPhone, passMessage({ partyName, members: confirmed }))
+        messaged = !!r.sent
+      } catch (err) {
+        console.warn('Pass message failed (non-blocking):', err?.message)
+      }
+    }
+
     return NextResponse.json({
       success: true,
       emailed,
+      messaged,
       confirmed: confirmed.map(({ isPrimary, ...rest }) => rest),
       declined: confirmed.length === 0,
     })
