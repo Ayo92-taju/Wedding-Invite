@@ -33,17 +33,17 @@ function shell(preheader: string, inner: string): string {
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:${C.ivory};border:1px solid rgba(169,118,46,0.35);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(74,63,55,0.10);">
           <tr><td style="height:6px;background:linear-gradient(90deg,${C.burgundy},${C.gold},${C.sage});"></td></tr>
           <tr><td style="padding:34px 40px 10px;text-align:center;">
-            <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:${C.gold};">${couple.tagline}</div>
+            <div style="font-size:12px;letter-spacing:4px;text-transform:uppercase;color:${C.gold};">${couple.tagline}</div>
             <div style="font-size:40px;color:${C.burgundy};margin:10px 0 4px;font-family:'Palatino Linotype','Book Antiqua',Georgia,serif;font-style:italic;">${couple.nameOne} <span style="color:${C.goldDeep};font-size:24px;">&amp;</span> ${couple.nameTwo}</div>
-            <div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:${C.inkSoft};">${wedding.dayShort}</div>
+            <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:${C.inkSoft};">${wedding.dayShort}</div>
           </td></tr>
           ${inner}
           <tr><td style="background:${C.paper};padding:22px 40px;text-align:center;border-top:1px solid rgba(169,118,46,0.25);">
-            <div style="font-size:12px;color:${C.inkSoft};font-style:italic;">With all our love,</div>
+            <div style="font-size:13px;color:${C.inkSoft};font-style:italic;">With all our love,</div>
             <div style="font-size:22px;color:${C.burgundy};font-family:'Palatino Linotype','Book Antiqua',Georgia,serif;font-style:italic;">${couple.nameOne} &amp; ${couple.nameTwo}</div>
           </td></tr>
         </table>
-        <div style="font-size:11px;color:${C.inkSoft};margin-top:16px;letter-spacing:1px;">${wedding.dayShort} · ${couple.hashtag}</div>
+        <div style="font-size:12px;color:${C.inkSoft};margin-top:16px;letter-spacing:1px;">${wedding.dayShort} · ${couple.hashtag}</div>
       </td></tr>
     </table>
   </body>
@@ -52,8 +52,8 @@ function shell(preheader: string, inner: string): string {
 
 function detailRow(label: string, value: string): string {
   return `<tr>
-    <td style="padding:8px 0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${C.gold};width:140px;vertical-align:top;">${label}</td>
-    <td style="padding:8px 0;font-size:15px;color:${C.ink};">${value}</td>
+    <td style="padding:8px 0;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${C.gold};width:140px;vertical-align:top;">${label}</td>
+    <td style="padding:8px 0;font-size:16px;color:${C.ink};">${value}</td>
   </tr>`
 }
 
@@ -61,7 +61,12 @@ function qrImg(code: string): string {
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&color=3a1420&bgcolor=fdfaf3&data=${encodeURIComponent(code)}`
 }
 
-export type ConfirmedMember = { fullName: string; inviteCode: string; tableName?: string | null }
+export type ConfirmedMember = {
+  fullName: string
+  inviteCode: string
+  tableName?: string | null
+  passImageUrl?: string
+}
 
 /*
  * Party RSVP confirmation — sent to the primary guest. Lists every confirmed
@@ -77,8 +82,8 @@ export function partyConfirmationEmail(p: {
   if (p.declined || p.members.length === 0) {
     const inner = `
       <tr><td style="padding:16px 40px 30px;text-align:center;">
-        <p style="font-size:16px;line-height:1.6;margin:0 0 6px;">Dearest ${first},</p>
-        <p style="font-size:15px;line-height:1.7;color:${C.inkSoft};font-style:italic;margin:0;">
+        <p style="font-size:17px;line-height:1.6;margin:0 0 6px;">Dearest ${first},</p>
+        <p style="font-size:16px;line-height:1.7;color:${C.inkSoft};font-style:italic;margin:0;">
           Thank you for letting us know you can’t join us. You’ll be in our hearts on the day —
           and in our prayers as we tie our threefold cord.
         </p>
@@ -90,15 +95,23 @@ export function partyConfirmationEmail(p: {
   }
 
   const passes = p.members
-    .map(
-      (m) => `
+    .map((m) =>
+      m.passImageUrl
+        ? `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px auto 0;">
+        <tr><td style="text-align:center;">
+          <img src="${m.passImageUrl}" width="460" height="644" alt="Invitation card for ${m.fullName}" style="display:block;margin:0 auto;border-radius:12px;max-width:100%;height:auto;box-shadow:0 8px 24px rgba(74,63,55,0.18);" />
+          <div style="font-family:'Courier New',monospace;font-size:17px;letter-spacing:3px;color:${C.ink};margin-top:12px;">${m.inviteCode}</div>
+        </td></tr>
+      </table>`
+        : `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:12px auto 0;background:${C.paper};border:1px solid rgba(169,118,46,0.4);border-radius:12px;">
         <tr><td style="padding:20px 26px;text-align:center;">
-          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:${C.gold};margin-bottom:4px;">Entry Pass</div>
-          <div style="font-size:19px;color:${C.burgundy};font-family:'Palatino Linotype','Book Antiqua',Georgia,serif;">${m.fullName}</div>
-          <div style="font-size:12px;color:${C.inkSoft};margin:2px 0 12px;">${m.tableName ? `Table ${m.tableName}` : 'Table to be advised'}</div>
+          <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:${C.gold};margin-bottom:4px;">Entry Pass</div>
+          <div style="font-size:21px;color:${C.burgundy};font-family:'Palatino Linotype','Book Antiqua',Georgia,serif;">${m.fullName}</div>
+          <div style="font-size:14px;color:${C.inkSoft};margin:2px 0 12px;">${m.tableName ? `Table ${m.tableName}` : 'Table to be advised'}</div>
           <img src="${qrImg(m.inviteCode)}" width="180" height="180" alt="Entry pass QR for ${m.fullName}" style="display:block;margin:0 auto;border-radius:8px;background:${C.ivory};" />
-          <div style="font-family:'Courier New',monospace;font-size:14px;letter-spacing:3px;color:${C.ink};margin-top:12px;">${m.inviteCode}</div>
+          <div style="font-family:'Courier New',monospace;font-size:17px;letter-spacing:3px;color:${C.ink};margin-top:12px;">${m.inviteCode}</div>
         </td></tr>
       </table>`,
     )
@@ -106,8 +119,8 @@ export function partyConfirmationEmail(p: {
 
   const inner = `
     <tr><td style="padding:14px 40px 0;text-align:center;">
-      <p style="font-size:16px;line-height:1.6;margin:0 0 6px;">Dearest ${first},</p>
-      <p style="font-size:15px;line-height:1.7;color:${C.inkSoft};font-style:italic;margin:0 0 8px;">
+      <p style="font-size:17px;line-height:1.6;margin:0 0 6px;">Dearest ${first},</p>
+      <p style="font-size:16px;line-height:1.7;color:${C.inkSoft};font-style:italic;margin:0 0 8px;">
         Your ${p.members.length > 1 ? 'seats are' : 'seat is'} saved. Each guest below has their own
         entry pass — please have it ready (on a phone or printed) at the gate.
       </p>
@@ -136,9 +149,9 @@ export function broadcastEmail(g: {
 }): { subject: string; html: string } {
   const inner = `
     <tr><td style="padding:16px 40px 8px;">
-      <p style="font-size:16px;color:${C.ink};margin:0 0 4px;">Dear ${g.name.split(' ')[0] || g.name},</p>
+      <p style="font-size:17px;color:${C.ink};margin:0 0 4px;">Dear ${g.name.split(' ')[0] || g.name},</p>
       <p style="font-size:18px;color:${C.burgundy};font-weight:bold;margin:6px 0 12px;">${g.title}</p>
-      <div style="font-size:15px;line-height:1.7;color:${C.ink};white-space:pre-line;">${g.message}</div>
+      <div style="font-size:16px;line-height:1.7;color:${C.ink};white-space:pre-line;">${g.message}</div>
     </td></tr>
     <tr><td style="padding:6px 40px 28px;"></td></tr>`
 

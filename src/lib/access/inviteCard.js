@@ -170,55 +170,55 @@ export async function renderInviteCardCanvas(guest) {
 
   // Eyebrow
   ctx.fillStyle = C.gold
-  ctx.font = '400 20px Cinzel, serif'
-  drawSpaced(ctx, 'THE WEDDING OF', cx, 150, 6)
+  ctx.font = '400 24px Cinzel, serif'
+  drawSpaced(ctx, 'THE WEDDING OF', cx, 150, 7)
 
   // Names
   ctx.fillStyle = C.burgundy
   ctx.textAlign = 'center'
-  ctx.font = '500 78px "Cormorant Garamond", Georgia, serif'
-  ctx.fillText(couple.heroNameOne, cx, 250)
-  ctx.font = 'italic 400 46px "Cormorant Garamond", Georgia, serif'
-  ctx.fillText('&', cx, 315)
-  ctx.font = '500 78px "Cormorant Garamond", Georgia, serif'
-  ctx.fillText(couple.nameTwo, cx, 388)
+  ctx.font = '500 88px "Cormorant Garamond", Georgia, serif'
+  ctx.fillText(couple.heroNameOne, cx, 262)
+  ctx.font = 'italic 400 52px "Cormorant Garamond", Georgia, serif'
+  ctx.fillText('&', cx, 334)
+  ctx.font = '500 88px "Cormorant Garamond", Georgia, serif'
+  ctx.fillText(couple.nameTwo, cx, 418)
 
   // Theme
   ctx.textAlign = 'left'
   ctx.fillStyle = C.gold
-  ctx.font = '400 19px Cinzel, serif'
-  drawSpaced(ctx, couple.tagline.toUpperCase(), cx, 440, 5)
+  ctx.font = '400 24px Cinzel, serif'
+  drawSpaced(ctx, couple.tagline.toUpperCase(), cx, 474, 6)
 
-  drawDivider(ctx, cx, 492, 520)
+  drawDivider(ctx, cx, 524, 520)
 
   // Facts
   const when = `${wedding.dayShort} · ${wedding.ceremony.time}`
   ctx.fillStyle = C.gold
-  ctx.font = '400 16px Cinzel, serif'
-  drawSpaced(ctx, 'WHEN', cx, 560, 5)
+  ctx.font = '400 20px Cinzel, serif'
+  drawSpaced(ctx, 'WHEN', cx, 592, 6)
   ctx.textAlign = 'center'
   ctx.fillStyle = C.ink
-  ctx.font = '400 30px "Cormorant Garamond", Georgia, serif'
-  ctx.fillText(when, cx, 604)
+  ctx.font = '400 38px "Cormorant Garamond", Georgia, serif'
+  ctx.fillText(when, cx, 646)
 
   ctx.textAlign = 'left'
   ctx.fillStyle = C.gold
-  ctx.font = '400 16px Cinzel, serif'
-  drawSpaced(ctx, 'WHERE', cx, 668, 5)
+  ctx.font = '400 20px Cinzel, serif'
+  drawSpaced(ctx, 'WHERE', cx, 714, 6)
   ctx.textAlign = 'center'
   ctx.fillStyle = C.ink
-  ctx.font = '400 30px "Cormorant Garamond", Georgia, serif'
-  const venueLines = wrapText(ctx, wedding.ceremony.venue, CARD_W - 220)
-  let vy = 712
+  ctx.font = '400 36px "Cormorant Garamond", Georgia, serif'
+  const venueLines = wrapText(ctx, wedding.ceremony.venue, CARD_W - 200)
+  let vy = 766
   for (const line of venueLines) {
     ctx.fillText(line, cx, vy)
-    vy += 38
+    vy += 46
   }
-  ctx.font = '400 23px "Cormorant Garamond", Georgia, serif'
+  ctx.font = '400 28px "Cormorant Garamond", Georgia, serif'
   ctx.fillStyle = C.muted
-  for (const line of wrapText(ctx, wedding.ceremony.address, CARD_W - 220)) {
+  for (const line of wrapText(ctx, wedding.ceremony.address, CARD_W - 200)) {
     ctx.fillText(line, cx, vy)
-    vy += 30
+    vy += 36
   }
 
   // ── Admit block + QR ──
@@ -248,28 +248,28 @@ export async function renderInviteCardCanvas(guest) {
 
   ctx.textAlign = 'left'
   ctx.fillStyle = C.gold
-  ctx.font = '400 16px Cinzel, serif'
-  drawSpaced(ctx, 'ADMIT ONE', padX, 1046, 5, 'left')
+  ctx.font = '400 20px Cinzel, serif'
+  drawSpaced(ctx, 'ADMIT ONE', padX, 1048, 6, 'left')
 
   ctx.fillStyle = C.burgundy
-  ctx.font = '500 46px "Cormorant Garamond", Georgia, serif'
+  ctx.font = '500 54px "Cormorant Garamond", Georgia, serif'
   const nameLines = wrapText(ctx, guest.fullName || 'Guest', qrX - padX - 40)
-  let ny = 1104
+  let ny = 1112
   for (const line of nameLines.slice(0, 2)) {
     ctx.fillText(line, padX, ny)
-    ny += 50
+    ny += 60
   }
 
   ctx.fillStyle = C.ink
-  ctx.font = '400 28px "Cormorant Garamond", Georgia, serif'
-  ctx.fillText(guest.tableName ? `Table ${guest.tableName}` : 'Table to be advised', padX, ny + 8)
+  ctx.font = '400 34px "Cormorant Garamond", Georgia, serif'
+  ctx.fillText(guest.tableName ? `Table ${guest.tableName}` : 'Table to be advised', padX, ny + 10)
 
   // Footer: invite code + hashtag
   ctx.fillStyle = C.muted
-  ctx.font = '400 20px Inter, sans-serif'
-  drawSpaced(ctx, String(guest.inviteCode || ''), padX, 1300, 4, 'left')
-  ctx.font = '400 18px Inter, sans-serif'
-  drawSpaced(ctx, couple.hashtag, padX, 1338, 3, 'left')
+  ctx.font = '400 26px Inter, sans-serif'
+  drawSpaced(ctx, String(guest.inviteCode || ''), padX, 1296, 4, 'left')
+  ctx.font = '400 21px Inter, sans-serif'
+  drawSpaced(ctx, couple.hashtag, padX, 1340, 3, 'left')
 
   return canvas
 }

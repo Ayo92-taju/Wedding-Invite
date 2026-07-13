@@ -48,7 +48,7 @@ export default function CountdownTimer() {
           viewport={{ once: true }}
           className="space-y-6"
         >
-          <span className="font-cinzel text-bloom-gold text-[10px] tracking-[0.35em] uppercase block">
+          <span className="font-cinzel text-bloom-gold text-xs tracking-[0.35em] uppercase block">
             Counting Down the Petals
           </span>
 
@@ -62,14 +62,14 @@ export default function CountdownTimer() {
                 <span className="font-serif text-3xl md:text-5xl font-light text-bloom-rose-dark dark:text-bloom-rose tabular-nums">
                   {String(block.value).padStart(2, '0')}
                 </span>
-                <span className="font-cinzel text-[8px] md:text-[9px] tracking-widest text-bloom-sage-dark dark:text-bloom-sage mt-2 uppercase">
+                <span className="font-cinzel text-[11px] md:text-[11px] tracking-widest text-bloom-sage-dark dark:text-bloom-sage mt-2 uppercase">
                   {block.label}
                 </span>
               </div>
             ))}
           </div>
 
-          <p className="font-serif italic text-xs md:text-sm text-bloom-sage-dark dark:text-bloom-sage/80 pt-4">
+          <p className="font-serif italic text-base md:text-lg text-bloom-sage-dark dark:text-bloom-sage/80 pt-4">
             {wedding.countdownNote}
           </p>
         </motion.div>

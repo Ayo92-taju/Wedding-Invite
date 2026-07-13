@@ -48,7 +48,7 @@ export default function WeddingDetails() {
             >
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <span className="font-cinzel text-[10px] text-bloom-gold tracking-widest uppercase">
+                  <span className="font-cinzel text-xs text-bloom-gold tracking-widest uppercase">
                     {ev.part}
                   </span>
                   <ev.Icon className="w-4 h-4 text-bloom-rose opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -60,7 +60,7 @@ export default function WeddingDetails() {
 
                 <div className="w-full h-px bg-gradient-to-r from-bloom-gold/30 via-bloom-gold/10 to-transparent my-4" />
 
-                <div className="space-y-3 font-serif text-sm text-bloom-charcoal/80 dark:text-bloom-cream/80 mb-6">
+                <div className="space-y-3 font-serif text-base text-bloom-charcoal/80 dark:text-bloom-cream/80 mb-6">
                   <div className="flex items-center gap-2.5">
                     <Calendar className="w-4 h-4 text-bloom-sage shrink-0" />
                     <span>{wedding.dateLong}</span>
@@ -75,17 +75,17 @@ export default function WeddingDetails() {
                   <div className="flex items-start gap-2.5 text-left">
                     <MapPin className="w-4 h-4 text-bloom-rose mt-1 shrink-0" />
                     <div>
-                      <h4 className="font-serif text-sm font-medium text-bloom-charcoal dark:text-bloom-cream">
+                      <h4 className="font-serif text-base font-medium text-bloom-charcoal dark:text-bloom-cream">
                         {ev.venue}
                       </h4>
-                      <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/70">
+                      <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/70">
                         {ev.address}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
+                <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
                   {ev.note}
                 </p>
               </div>
@@ -108,7 +108,7 @@ export default function WeddingDetails() {
           >
             <div>
               <div className="flex justify-between items-center mb-6">
-                <span className="font-cinzel text-[10px] text-bloom-gold tracking-widest uppercase">
+                <span className="font-cinzel text-xs text-bloom-gold tracking-widest uppercase">
                   Part Three
                 </span>
                 <Sparkles className="w-4 h-4 text-bloom-gold opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -124,7 +124,7 @@ export default function WeddingDetails() {
                 {wedding.dressCode.text}
               </p>
 
-              <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
+              <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
                 {wedding.dressCode.detail}
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function WeddingDetails() {
           <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80">
             {wedding.dayShort} · {wedding.ceremony.venue}
           </p>
-          <span className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-bloom-gold">
+          <span className="font-cinzel text-xs tracking-[0.3em] uppercase text-bloom-gold">
             {couple.hashtag}
           </span>
         </motion.div>

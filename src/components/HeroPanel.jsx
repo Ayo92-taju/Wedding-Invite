@@ -24,7 +24,7 @@ export default function HeroPanel() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 0.8, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="font-cinzel text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-4 text-bloom-gold"
+          className="font-cinzel text-xs md:text-sm tracking-[0.4em] uppercase block mb-4 text-bloom-gold"
         >
           Welcome to the Wedding of
         </motion.span>
@@ -47,7 +47,7 @@ export default function HeroPanel() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="space-y-3 font-serif text-sm md:text-base text-bloom-sage-dark dark:text-bloom-sage max-w-lg mx-auto"
+          className="space-y-3 font-serif text-base md:text-lg text-bloom-sage-dark dark:text-bloom-sage max-w-lg mx-auto"
         >
           <p className="tracking-widest uppercase text-xs text-bloom-gold font-light">{wedding.dayShort}</p>
           <p className="italic font-light">
@@ -61,7 +61,7 @@ export default function HeroPanel() {
           transition={{ duration: 1.5, delay: 0.8 }}
           className="border-t border-dashed border-bloom-gold/15 pt-8 mt-10 max-w-sm mx-auto"
         >
-          <p className="font-serif italic text-xs leading-relaxed text-bloom-sage-dark dark:text-bloom-sage/70">
+          <p className="font-serif italic text-sm leading-relaxed text-bloom-sage-dark dark:text-bloom-sage/70">
             &ldquo;{couple.intro}&rdquo;
           </p>
         </motion.div>
@@ -70,7 +70,7 @@ export default function HeroPanel() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => document.getElementById('invitation')?.scrollIntoView({ behavior: 'smooth' })}
-          className="mt-12 px-8 py-3.5 bg-bloom-gold text-bloom-ivory font-cinzel text-[10px] tracking-widest uppercase rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 mx-auto cursor-pointer"
+          className="mt-12 px-8 py-3.5 bg-bloom-gold text-bloom-ivory font-cinzel text-xs tracking-widest uppercase rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 mx-auto cursor-pointer"
         >
           <Navigation className="w-3 h-3 rotate-45" />
           Unfold Invitation

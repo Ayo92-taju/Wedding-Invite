@@ -61,7 +61,7 @@ export default function GiftRegistry() {
             <div className="w-14 h-14 rounded-full bg-bloom-sage/10 flex items-center justify-center mb-3">
               <Sprout className="w-6 h-6 text-bloom-sage" />
             </div>
-            <span className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-bloom-gold">
+            <span className="font-cinzel text-xs tracking-[0.3em] uppercase text-bloom-gold">
               A Seed of Love
             </span>
           </div>
@@ -75,7 +75,7 @@ export default function GiftRegistry() {
               >
                 <Icon className="w-4 h-4 text-bloom-rose shrink-0" />
                 <div className="min-w-0">
-                  <p className="font-cinzel text-[9px] tracking-widest text-bloom-gold uppercase">{label}</p>
+                  <p className="font-cinzel text-[11px] tracking-widest text-bloom-gold uppercase">{label}</p>
                   <p className="font-serif text-base text-bloom-charcoal dark:text-bloom-cream truncate">{value}</p>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export default function GiftRegistry() {
             <div className="flex items-center gap-3 pt-1">
               <Hash className="w-4 h-4 text-bloom-rose shrink-0" />
               <div className="min-w-0 flex-1">
-                <p className="font-cinzel text-[9px] tracking-widest text-bloom-gold uppercase">Account Number</p>
+                <p className="font-cinzel text-[11px] tracking-widest text-bloom-gold uppercase">Account Number</p>
                 <p className="font-serif text-2xl md:text-3xl tracking-wide text-bloom-charcoal dark:text-bloom-cream tabular-nums">
                   {account.number}
                 </p>
@@ -93,7 +93,7 @@ export default function GiftRegistry() {
               <button
                 type="button"
                 onClick={copyNumber}
-                className="shrink-0 px-4 py-2.5 bg-bloom-gold hover:bg-bloom-gold/90 text-bloom-ivory font-cinzel text-[10px] tracking-widest uppercase rounded-full shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="shrink-0 px-4 py-2.5 bg-bloom-gold hover:bg-bloom-gold/90 text-bloom-ivory font-cinzel text-xs tracking-widest uppercase rounded-full shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? 'Copied' : 'Copy'}

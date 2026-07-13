@@ -100,7 +100,7 @@ export default function InvitationCard() {
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent rounded-full rotate-45" />
                   </motion.div>
 
-                  <span className="font-serif text-sm italic text-bloom-rose-dark dark:text-bloom-blush mt-4 group-hover:text-bloom-rose transition-colors">
+                  <span className="font-serif text-base italic text-bloom-rose-dark dark:text-bloom-blush mt-4 group-hover:text-bloom-rose transition-colors">
                     Click the seal to unfold
                   </span>
                 </div>
@@ -108,7 +108,7 @@ export default function InvitationCard() {
                 <p className="font-cinzel text-bloom-charcoal/80 dark:text-bloom-cream/80 text-sm tracking-[0.2em] uppercase">
                   {couple.nameOne} &amp; {couple.nameTwo}
                 </p>
-                <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/70 mt-1">
+                <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/70 mt-1">
                   A private invitation
                 </p>
 
@@ -147,7 +147,7 @@ export default function InvitationCard() {
                       <h3 className="font-script text-3xl text-bloom-rose-dark dark:text-bloom-blush">
                         {couple.nameOne} &amp; {couple.nameTwo}
                       </h3>
-                      <p className="font-serif italic text-xs tracking-wider text-bloom-sage-dark dark:text-bloom-sage mt-1">
+                      <p className="font-serif italic text-sm tracking-wider text-bloom-sage-dark dark:text-bloom-sage mt-1">
                         &ldquo;{couple.tagline}&rdquo;
                       </p>
                     </motion.div>
@@ -158,14 +158,14 @@ export default function InvitationCard() {
                 <div className="relative md:w-7/12 p-8 md:p-12 flex flex-col justify-between">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="absolute top-4 right-4 text-bloom-rose hover:text-bloom-rose-dark font-serif text-sm tracking-widest uppercase italic border-b border-transparent hover:border-bloom-rose cursor-pointer"
+                    className="absolute top-4 right-4 text-bloom-rose hover:text-bloom-rose-dark font-serif text-base tracking-widest uppercase italic border-b border-transparent hover:border-bloom-rose cursor-pointer"
                   >
                     Fold Close
                   </button>
 
                   <div className="my-auto space-y-6 text-center md:text-left">
                     <div className="space-y-2">
-                      <span className="font-cinzel text-bloom-gold text-[10px] tracking-[0.35em] uppercase block">
+                      <span className="font-cinzel text-bloom-gold text-xs tracking-[0.35em] uppercase block">
                         The honour of your presence
                       </span>
                       <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80">
@@ -208,7 +208,7 @@ export default function InvitationCard() {
                     </div>
 
                     <div className="border-t border-bloom-gold/20 pt-6 mt-6">
-                      <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
+                      <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed">
                         {wedding.reception.label} — {wedding.reception.time}. <br />
                         {wedding.dressCode.label}: {wedding.dressCode.text}.
                       </p>

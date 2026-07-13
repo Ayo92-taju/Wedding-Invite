@@ -95,7 +95,7 @@ export default function LoveNotes() {
               </p>
 
               <div className="space-y-1">
-                <label className="font-cinzel text-[9px] tracking-widest text-bloom-gold uppercase block">
+                <label className="font-cinzel text-[11px] tracking-widest text-bloom-gold uppercase block">
                   Your Name
                 </label>
                 <input
@@ -106,12 +106,12 @@ export default function LoveNotes() {
                   placeholder="e.g. Aunty Bisi"
                   value={form.name}
                   onChange={change}
-                  className="w-full bg-bloom-cream/40 dark:bg-dark-garden/20 border border-bloom-gold/20 rounded-xl px-4 py-2.5 text-xs focus:outline-hidden focus:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream"
+                  className="w-full bg-bloom-cream/40 dark:bg-dark-garden/20 border border-bloom-gold/20 rounded-xl px-4 py-2.5 text-sm focus:outline-hidden focus:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-cinzel text-[9px] tracking-widest text-bloom-gold uppercase block">
+                <label className="font-cinzel text-[11px] tracking-widest text-bloom-gold uppercase block">
                   Blessing or Question
                 </label>
                 <textarea
@@ -122,14 +122,14 @@ export default function LoveNotes() {
                   placeholder="Press a little love into our story…"
                   value={form.message}
                   onChange={change}
-                  className="w-full bg-bloom-cream/40 dark:bg-dark-garden/20 border border-bloom-gold/20 rounded-xl px-4 py-2.5 text-xs focus:outline-hidden focus:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream"
+                  className="w-full bg-bloom-cream/40 dark:bg-dark-garden/20 border border-bloom-gold/20 rounded-xl px-4 py-2.5 text-sm focus:outline-hidden focus:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-3 bg-bloom-gold hover:bg-bloom-gold/90 text-bloom-ivory font-cinzel text-[10px] tracking-widest uppercase rounded-full shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                className="w-full py-3 bg-bloom-gold hover:bg-bloom-gold/90 text-bloom-ivory font-cinzel text-xs tracking-widest uppercase rounded-full shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 <Send className="w-3.5 h-3.5" />
                 {busy ? 'Pressing…' : 'Pin Love Note'}
@@ -141,7 +141,7 @@ export default function LoveNotes() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage text-center pt-1"
+                    className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage text-center pt-1"
                   >
                     Your note has been pressed between our pages. Thank you. ❀
                   </motion.p>
@@ -173,7 +173,7 @@ export default function LoveNotes() {
                   >
                     <Bookmark className="absolute top-0 right-4 w-4 h-6 text-bloom-rose opacity-20 group-hover:opacity-100 transition-opacity" />
 
-                    <p className="font-serif italic text-xs md:text-sm text-bloom-charcoal/90 dark:text-bloom-cream/90 leading-relaxed mb-4">
+                    <p className="font-serif italic text-base md:text-lg text-bloom-charcoal/90 dark:text-bloom-cream/90 leading-relaxed mb-4">
                       &ldquo;{note.message}&rdquo;
                     </p>
 
@@ -205,13 +205,13 @@ export default function LoveNotes() {
                 key={item.q}
                 className="group bg-bloom-ivory dark:bg-dark-paper border border-bloom-gold/15 rounded-2xl px-6 py-4 paper-texture"
               >
-                <summary className="flex items-center justify-between cursor-pointer list-none font-serif text-sm text-bloom-charcoal dark:text-bloom-cream">
+                <summary className="flex items-center justify-between cursor-pointer list-none font-serif text-base text-bloom-charcoal dark:text-bloom-cream">
                   {item.q}
                   <span className="text-bloom-gold text-lg leading-none transition-transform duration-300 group-open:rotate-45">
                     +
                   </span>
                 </summary>
-                <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed pt-3">
+                <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed pt-3">
                   {item.a}
                 </p>
               </details>

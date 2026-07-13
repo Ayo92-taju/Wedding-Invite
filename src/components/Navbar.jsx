@@ -66,7 +66,7 @@ export default function Navbar() {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="font-cinzel text-[10px] tracking-[0.2em] uppercase text-bloom-charcoal/80 dark:text-bloom-cream/80 hover:text-bloom-rose dark:hover:text-bloom-rose transition-colors relative group py-1 cursor-pointer"
+                className="font-cinzel text-xs tracking-[0.2em] uppercase text-bloom-charcoal/80 dark:text-bloom-cream/80 hover:text-bloom-rose dark:hover:text-bloom-rose transition-colors relative group py-1 cursor-pointer"
               >
                 {item.label}
                 <span className="absolute bottom-0 left-1/2 w-0 h-px bg-bloom-rose transition-all group-hover:w-full group-hover:left-0" />

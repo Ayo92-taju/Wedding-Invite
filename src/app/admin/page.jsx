@@ -145,7 +145,7 @@ function Stat({ label, value, tone = 'text-bloom-charcoal' }) {
   return (
     <div className="bg-bloom-ivory border border-bloom-gold/20 rounded-2xl p-4">
       <p className={`font-serif text-3xl ${tone}`}>{value}</p>
-      <p className="text-[10px] uppercase tracking-widest text-bloom-sage-dark mt-1">{label}</p>
+      <p className="text-xs uppercase tracking-widest text-bloom-sage-dark mt-1">{label}</p>
     </div>
   )
 }
@@ -260,8 +260,16 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) setErr(data?.error || 'Dispatch failed.')
-      else if (data.sent) setErr(`✓ Passes sent to ${data.to} via ${data.channel}.`)
-      else setErr(data?.error || 'Twilio sender not configured yet — add TWILIO_WHATSAPP_FROM or TWILIO_SMS_FROM.')
+      else if (data.sent) {
+        const channels = [
+          data.emailed && 'email',
+          data.sms?.sent && 'SMS',
+          data.whatsapp?.some((w) => w.sent) && 'WhatsApp',
+        ].filter(Boolean)
+        setErr(`✓ Passes sent via ${channels.join(' + ')}.`)
+      } else {
+        setErr(data?.sms?.error || data?.error || 'No channel delivered — check Twilio senders and the guest’s contact details.')
+      }
     } catch (e) { setErr(e?.message || 'Dispatch failed.') }
     setBusy('')
   }
@@ -319,7 +327,7 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                 <tr key={g.id} className="border-t border-bloom-gold/10">
                   <td className="px-3 py-2"><input type="checkbox" checked={sel.has(g.id)} onChange={() => toggle(g.id)} /></td>
                   <td className="px-3 py-2">
-                    {g.fullName} {g.isPrimary && <span className="text-[9px] text-bloom-gold uppercase">primary</span>}
+                    {g.fullName} {g.isPrimary && <span className="text-[11px] text-bloom-gold uppercase">primary</span>}
                   </td>
                   <td className="px-3 py-2 text-bloom-sage-dark">{partyName(g.partyId)}</td>
                   <td className="px-3 py-2 font-mono">{g.inviteCode}</td>
@@ -353,18 +361,18 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                   <td className="px-3 py-2">
                     <button
                       onClick={() => setGuestCheckedIn(g.id, !g.checkedIn, adminEmail).catch((x) => setErr(x?.message))}
-                      className={`px-2 py-1 rounded-full text-[10px] cursor-pointer ${g.checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-bloom-cream border border-bloom-gold/20 text-bloom-sage-dark'}`}
+                      className={`px-2 py-1 rounded-full text-xs cursor-pointer ${g.checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-bloom-cream border border-bloom-gold/20 text-bloom-sage-dark'}`}
                       title={g.checkedIn ? 'Undo check-in' : 'Mark checked in'}
                     >
                       {g.checkedIn ? '✓ in' : 'out'}
                     </button>
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
-                    <button onClick={() => savePass(g)} disabled={busy === g.id} className="text-[11px] text-bloom-gold underline disabled:opacity-50 cursor-pointer">
+                    <button onClick={() => savePass(g)} disabled={busy === g.id} className="text-xs text-bloom-gold underline disabled:opacity-50 cursor-pointer">
                       {busy === g.id ? 'Making…' : 'Save pass'}
                     </button>
                     <span className="text-bloom-gold/40 mx-1.5">·</span>
-                    <button onClick={() => resend(g)} disabled={busy === `send-${g.id}`} className="text-[11px] text-bloom-rose underline cursor-pointer disabled:opacity-50">
+                    <button onClick={() => resend(g)} disabled={busy === `send-${g.id}`} className="text-xs text-bloom-rose underline cursor-pointer disabled:opacity-50">
                       {busy === `send-${g.id}` ? 'Sending…' : 'Send passes'}
                     </button>
                   </td>
@@ -547,7 +555,7 @@ function ImportTab() {
               </tbody>
             </table>
             {plan.parties.length > 200 && (
-              <p className="text-[11px] text-bloom-sage-dark px-3 py-2">Showing first 200 of {plan.parties.length} parties.</p>
+              <p className="text-xs text-bloom-sage-dark px-3 py-2">Showing first 200 of {plan.parties.length} parties.</p>
             )}
           </div>
 
@@ -596,7 +604,7 @@ function TablesTab({ guests, tables }) {
         <Field label="Table name"><input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Table 1 — Family" className="border border-bloom-gold/20 rounded-lg px-3 py-2 text-sm min-w-[220px]" /></Field>
         <Field label="Capacity"><input type="number" min="1" value={cap} onChange={(e) => setCap(e.target.value)} className="border border-bloom-gold/20 rounded-lg px-3 py-2 text-sm w-24" /></Field>
         <button onClick={add} className="px-5 py-2 bg-bloom-gold text-white rounded-full text-xs font-cinzel tracking-widest uppercase cursor-pointer">Add</button>
-        <p className="text-[11px] text-bloom-sage-dark basis-full">Assign guests to tables from the Guests tab — capacity fills are computed live.</p>
+        <p className="text-xs text-bloom-sage-dark basis-full">Assign guests to tables from the Guests tab — capacity fills are computed live.</p>
       </div>
 
       {err && <p className="text-sm bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-3">{err}</p>}
@@ -660,7 +668,7 @@ function ScannersTab() {
             <div key={s.id} className="bg-bloom-ivory border border-bloom-gold/20 rounded-xl px-4 py-3 flex items-center justify-between">
               <div>
                 <p className="text-sm">{s.id}</p>
-                <p className="text-[11px] text-bloom-sage-dark">{s.assignedGate || 'Main Entrance'}</p>
+                <p className="text-xs text-bloom-sage-dark">{s.assignedGate || 'Main Entrance'}</p>
               </div>
               <button onClick={() => removeScanner(s.id).catch((e) => setErr(e?.message))} className="text-xs text-bloom-rose underline cursor-pointer">Remove</button>
             </div>

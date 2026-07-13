@@ -298,7 +298,7 @@ export default function OpeningExperience({ onComplete }) {
               initial={{ opacity: 0.3 }}
               animate={{ opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 1.8, repeat: Infinity }}
-              className="font-serif text-sm italic text-bloom-rose/60 dark:text-bloom-gold-light/40"
+              className="font-serif text-base italic text-bloom-rose/60 dark:text-bloom-gold-light/40"
             >
               The garden is cultivating…
             </motion.p>

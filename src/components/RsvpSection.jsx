@@ -150,7 +150,7 @@ export default function RsvpSection() {
                 </p>
 
                 <div className="max-w-md mx-auto space-y-1 text-left">
-                  <label className="font-cinzel text-[10px] tracking-widest text-bloom-gold uppercase block">
+                  <label className="font-cinzel text-xs tracking-widest text-bloom-gold uppercase block">
                     Phone number or email
                   </label>
                   <input
@@ -202,12 +202,12 @@ export default function RsvpSection() {
                 <div className="text-center">
                   <div className="inline-flex items-center gap-2 text-bloom-gold mb-1">
                     <Users className="w-4 h-4" />
-                    <span className="font-cinzel text-[10px] tracking-[0.25em] uppercase">Your invitation</span>
+                    <span className="font-cinzel text-xs tracking-[0.25em] uppercase">Your invitation</span>
                   </div>
                   <h3 className="font-serif text-2xl md:text-3xl text-bloom-charcoal dark:text-bloom-cream">
                     {party.partyName}
                   </h3>
-                  <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage mt-1">
+                  <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage mt-1">
                     {party.allowedSeats} seat{party.allowedSeats === 1 ? '' : 's'} reserved · tick everyone attending
                   </p>
                 </div>
@@ -238,7 +238,7 @@ export default function RsvpSection() {
                           <p className="font-serif text-base text-bloom-charcoal dark:text-bloom-cream truncate">
                             {m.fullName}
                           </p>
-                          <p className="font-cinzel text-[9px] tracking-widest uppercase text-bloom-gold">
+                          <p className="font-cinzel text-[11px] tracking-widest uppercase text-bloom-gold">
                             {m.isPrimary ? 'Invited guest' : 'Companion'}
                           </p>
                         </div>
@@ -256,13 +256,13 @@ export default function RsvpSection() {
                             }
                             className="w-full bg-transparent border-b border-bloom-gold/30 focus:border-bloom-gold px-0.5 py-1 text-base font-serif text-bloom-charcoal dark:text-bloom-cream focus:outline-hidden disabled:opacity-50"
                           />
-                          <p className="font-cinzel text-[9px] tracking-widest uppercase text-bloom-gold mt-1">
+                          <p className="font-cinzel text-[11px] tracking-widest uppercase text-bloom-gold mt-1">
                             Plus one — add their name
                           </p>
                         </div>
                       )}
                       {m.checkedIn && (
-                        <span className="font-cinzel text-[9px] tracking-widest uppercase text-bloom-sage shrink-0">
+                        <span className="font-cinzel text-[11px] tracking-widest uppercase text-bloom-sage shrink-0">
                           Checked in
                         </span>
                       )}
@@ -271,7 +271,7 @@ export default function RsvpSection() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-cinzel text-[10px] tracking-widest text-bloom-gold uppercase block">
+                  <label className="font-cinzel text-xs tracking-widest text-bloom-gold uppercase block">
                     A note for the couple (optional)
                   </label>
                   <textarea
@@ -300,7 +300,7 @@ export default function RsvpSection() {
                     type="button"
                     onClick={() => submit(true)}
                     disabled={busy}
-                    className="px-8 py-4 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-[10px] tracking-widest uppercase rounded-full cursor-pointer transition-colors"
+                    className="px-8 py-4 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-xs tracking-widest uppercase rounded-full cursor-pointer transition-colors"
                   >
                     Regretfully decline
                   </button>
@@ -361,7 +361,7 @@ export default function RsvpSection() {
                   <h3 className="font-cinzel text-sm tracking-[0.2em] uppercase text-bloom-sage-dark dark:text-bloom-sage">
                     Your seats are saved!
                   </h3>
-                  <p className="font-serif italic text-xs text-bloom-sage max-w-sm">
+                  <p className="font-serif italic text-sm text-bloom-sage max-w-sm">
                     Each guest has their own entry pass — save them below
                     {result.emailed ? ', and a copy is on its way to your inbox' : ''}. ❀
                   </p>
@@ -376,7 +376,7 @@ export default function RsvpSection() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="px-6 py-2.5 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-[10px] tracking-widest uppercase rounded-full flex items-center gap-2 cursor-pointer transition-all duration-300"
+                  className="px-6 py-2.5 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-xs tracking-widest uppercase rounded-full flex items-center gap-2 cursor-pointer transition-all duration-300"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Edit response
@@ -402,7 +402,7 @@ export default function RsvpSection() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="px-6 py-2.5 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-[10px] tracking-widest uppercase rounded-full cursor-pointer transition-all duration-300"
+                  className="px-6 py-2.5 border border-bloom-gold/30 hover:border-bloom-gold text-bloom-charcoal dark:text-bloom-cream font-cinzel text-xs tracking-widest uppercase rounded-full cursor-pointer transition-all duration-300"
                 >
                   Change my response
                 </button>
@@ -458,7 +458,7 @@ function PassPreview({ guest }) {
         type="button"
         onClick={save}
         disabled={saving}
-        className="px-5 py-2 bg-bloom-sage hover:bg-bloom-sage-dark text-bloom-ivory font-cinzel text-[10px] tracking-widest uppercase rounded-full flex items-center gap-1.5 cursor-pointer shadow-sm transition-all duration-300 disabled:opacity-60"
+        className="px-5 py-2 bg-bloom-sage hover:bg-bloom-sage-dark text-bloom-ivory font-cinzel text-xs tracking-widest uppercase rounded-full flex items-center gap-1.5 cursor-pointer shadow-sm transition-all duration-300 disabled:opacity-60"
       >
         <Download className="w-3 h-3" />
         {saving ? 'Saving…' : `Save ${guest.fullName.split(' ')[0]}’s pass`}

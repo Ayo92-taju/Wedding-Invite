@@ -31,6 +31,9 @@
 }
 
 html {
+  /* Readability: larger base size scales every rem-based Tailwind size
+     (type AND spacing) proportionally across the site. */
+  font-size: 112.5%;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }

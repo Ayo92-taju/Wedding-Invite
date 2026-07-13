@@ -232,7 +232,7 @@ export default function ScanPage() {
           <span className="font-cinzel text-sm tracking-[0.3em] uppercase opacity-90">{flash.title}</span>
           <span className="font-serif text-4xl md:text-6xl font-medium mt-4 leading-tight">{flash.name}</span>
           <span className="font-serif text-xl md:text-3xl mt-3 opacity-95">{flash.detail}</span>
-          <span className="text-[11px] uppercase tracking-widest mt-8 opacity-70">tap anywhere to continue</span>
+          <span className="text-xs uppercase tracking-widest mt-8 opacity-70">tap anywhere to continue</span>
         </button>
       )}
 
@@ -242,7 +242,7 @@ export default function ScanPage() {
           <p className="text-xs opacity-70">{gate} · {user.email}</p>
         </div>
         <div className="text-right space-y-1">
-          <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] uppercase tracking-widest ${online ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+          <span className={`inline-block px-2.5 py-1 rounded-full text-xs uppercase tracking-widest ${online ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
             {online ? 'Online' : 'Offline — queueing'}
           </span>
           <button onClick={() => signOut(auth)} className="block ml-auto text-xs text-bloom-rose underline cursor-pointer">Sign out</button>
@@ -261,7 +261,7 @@ export default function ScanPage() {
           ) : (
             <button
               onClick={() => setCameraOn(false)}
-              className="w-full py-2.5 border border-bloom-gold/40 rounded-xl font-cinzel text-[10px] tracking-widest uppercase text-bloom-sage-dark cursor-pointer"
+              className="w-full py-2.5 border border-bloom-gold/40 rounded-xl font-cinzel text-xs tracking-widest uppercase text-bloom-sage-dark cursor-pointer"
             >
               Stop camera
             </button>
@@ -280,14 +280,14 @@ export default function ScanPage() {
             placeholder="Or type a code, e.g. ABA-6QN2"
             className="flex-1 bg-white border border-bloom-gold/25 rounded-xl px-4 py-3 text-sm font-mono uppercase"
           />
-          <button type="submit" className="px-5 bg-bloom-charcoal text-white rounded-xl font-cinzel text-[10px] tracking-widest uppercase cursor-pointer">
+          <button type="submit" className="px-5 bg-bloom-charcoal text-white rounded-xl font-cinzel text-xs tracking-widest uppercase cursor-pointer">
             Check in
           </button>
         </form>
 
         {history.length > 0 && (
           <div className="bg-white/70 border border-bloom-gold/25 rounded-2xl p-4">
-            <p className="font-cinzel text-[10px] tracking-widest uppercase text-bloom-sage-dark mb-2">This session</p>
+            <p className="font-cinzel text-xs tracking-widest uppercase text-bloom-sage-dark mb-2">This session</p>
             <ul className="space-y-1.5 text-sm">
               {history.map((h, i) => (
                 <li key={i} className="flex items-center gap-2">

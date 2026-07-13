@@ -12,12 +12,12 @@ export default function SiteFooter() {
 
         <div className="w-12 h-px bg-bloom-gold/40 mx-auto" />
 
-        <p className="font-serif italic text-xs text-bloom-sage-dark dark:text-bloom-sage/70 leading-relaxed">
+        <p className="font-serif italic text-sm text-bloom-sage-dark dark:text-bloom-sage/70 leading-relaxed">
           Thank you for being part of our story. We can&apos;t wait to celebrate our love blooming
           with you, surrounded by flowers and everyone we love.
         </p>
 
-        <nav className="flex items-center justify-center gap-5 font-cinzel text-[10px] tracking-widest uppercase text-bloom-sage-dark dark:text-bloom-sage" aria-label="Footer">
+        <nav className="flex items-center justify-center gap-5 font-cinzel text-xs tracking-widest uppercase text-bloom-sage-dark dark:text-bloom-sage" aria-label="Footer">
           <a href="#story" className="hover:text-bloom-rose transition-colors">Story</a>
           <a href="#details" className="hover:text-bloom-rose transition-colors">Details</a>
           <a href="#registry" className="hover:text-bloom-rose transition-colors">Registry</a>
@@ -25,10 +25,10 @@ export default function SiteFooter() {
         </nav>
 
         <div className="space-y-1 pt-2">
-          <p className="font-cinzel text-[9px] tracking-[0.3em] uppercase text-bloom-gold">
+          <p className="font-cinzel text-[11px] tracking-[0.3em] uppercase text-bloom-gold">
             {couple.hashtag}
           </p>
-          <p className="font-serif text-[10px] text-bloom-sage-dark dark:text-bloom-sage/50">
+          <p className="font-serif text-xs text-bloom-sage-dark dark:text-bloom-sage/50">
             {wedding.dayShort} &bull; {couple.tagline}
           </p>
         </div>

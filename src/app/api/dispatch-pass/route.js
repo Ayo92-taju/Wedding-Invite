@@ -1,16 +1,15 @@
 import { NextResponse } from 'next/server'
 import { getAdminDb } from '@/lib/server/adminDb.js'
-import { sendGuestMessage, passMessage, twilioStatus } from '@/lib/server/twilio.js'
+import { notifyParty } from '@/lib/server/notify.js'
+import { twilioStatus } from '@/lib/server/twilio.js'
 
 export const runtime = 'nodejs'
 
 /*
- * (Re)send a party's entry passes by WhatsApp/SMS.
- * Body: { inviteCode } — any member's code; the message covers every
- * CONFIRMED member of that party (PENDING members are included too so a
- * not-yet-replied household still gets usable codes).
- * Goes to the tapped guest's own phone when they have one, else the party's
- * primary contact phone.
+ * (Re)send a party's entry passes on every channel we have for them:
+ * email (card images), WhatsApp (card image per member), and SMS (codes).
+ * Body: { inviteCode } — any member's code; covers every non-declined
+ * member of that party.
  */
 export async function POST(request) {
   const db = getAdminDb()
@@ -42,8 +41,8 @@ export async function POST(request) {
     const tableNames = {}
     tablesSnap.forEach((t) => { tableNames[t.id] = t.data().tableName })
 
-    const members = memberSnap.docs
-      .map((d) => d.data())
+    const all = memberSnap.docs.map((d) => d.data())
+    const members = all
       .filter((g) => g.rsvpStatus !== 'DECLINED')
       .map((g) => ({
         fullName: g.fullName,
@@ -54,14 +53,24 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Every member of this party has declined.' }, { status: 400 })
     }
 
-    const primary = memberSnap.docs.map((d) => d.data()).find((g) => g.isPrimary)
-    const to = guest.phone || primary?.phone || party.primaryContactPhone
-    const result = await sendGuestMessage(
-      to,
-      passMessage({ partyName: party.partyName || guest.fullName, members }),
-    )
+    const primary = all.find((g) => g.isPrimary)
+    const origin = request.nextUrl?.origin || process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_URL || ''
+    const result = await notifyParty({
+      origin,
+      partyName: party.partyName || guest.fullName,
+      primaryName: primary?.fullName || guest.fullName,
+      email: guest.email || primary?.email || party.primaryContactEmail || '',
+      phone: guest.phone || primary?.phone || party.primaryContactPhone || '',
+      members,
+    })
 
-    return NextResponse.json({ ...result, to: result.sent ? to : undefined, twilio: twilioStatus() })
+    return NextResponse.json({
+      emailed: result.emailed,
+      sms: result.sms,
+      whatsapp: result.whatsapp,
+      sent: !!(result.emailed || result.sms?.sent || result.whatsapp.some((w) => w.sent)),
+      twilio: twilioStatus(),
+    })
   } catch (err) {
     console.error('Dispatch failed:', err)
     return NextResponse.json({ error: err?.message || 'Dispatch failed.' }, { status: 500 })

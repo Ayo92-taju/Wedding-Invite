@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
 import { FieldValue } from 'firebase-admin/firestore'
 import { getAdminDb } from '@/lib/server/adminDb.js'
-import getResendClient from '@/utils/getResendClient'
-import { partyConfirmationEmail } from '@/utils/emailTemplate'
-import { sendGuestMessage, passMessage } from '@/lib/server/twilio.js'
-import { couple } from '@/data/content'
+import { notifyParty } from '@/lib/server/notify.js'
 
 export const runtime = 'nodejs'
 
@@ -112,45 +109,22 @@ export async function POST(request) {
 
     await batch.commit()
 
-    // Confirmation email (fire-and-forget; never blocks the RSVP).
-    const to = String(body?.contactEmail || primaryEmail || '').trim().toLowerCase()
-    let emailed = false
-    if (to && to.includes('@')) {
-      try {
-        const resend = getResendClient()
-        const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
-        const { subject, html } = partyConfirmationEmail({
-          primaryName: primaryName || confirmed[0]?.fullName || 'friend',
-          members: confirmed,
-          declined: confirmed.length === 0,
-        })
-        if (resend) {
-          await resend.emails.send({ from: `${couple.nameOne} & ${couple.nameTwo} <${fromEmail}>`, to: [to], subject, html })
-          emailed = true
-        } else {
-          console.log(`[EMAIL SIMULATOR] Party confirmation → ${to} (${confirmed.length} passes)`)
-        }
-      } catch (err) {
-        console.warn('Confirmation email failed (non-blocking):', err?.message)
-      }
-    }
-
-    // WhatsApp/SMS the passes to the primary's phone (fire-and-forget).
-    let messaged = false
-    if (confirmed.length > 0 && primaryPhone) {
-      try {
-        const partyName = partyDoc.data().partyName || primaryName || 'your party'
-        const r = await sendGuestMessage(primaryPhone, passMessage({ partyName, members: confirmed }))
-        messaged = !!r.sent
-      } catch (err) {
-        console.warn('Pass message failed (non-blocking):', err?.message)
-      }
-    }
+    // Fan out email (card images) + WhatsApp (card image per member) + SMS.
+    const origin = request.nextUrl?.origin || process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_URL || ''
+    const notify = await notifyParty({
+      origin,
+      partyName: partyDoc.data().partyName || primaryName || 'your party',
+      primaryName: primaryName || confirmed[0]?.fullName || 'friend',
+      email: String(body?.contactEmail || primaryEmail || '').trim(),
+      phone: primaryPhone,
+      members: confirmed,
+      declined: confirmed.length === 0,
+    })
 
     return NextResponse.json({
       success: true,
-      emailed,
-      messaged,
+      emailed: notify.emailed,
+      messaged: !!(notify.sms?.sent || notify.whatsapp.some((w) => w.sent)),
       confirmed: confirmed.map(({ isPrimary, ...rest }) => rest),
       declined: confirmed.length === 0,
     })

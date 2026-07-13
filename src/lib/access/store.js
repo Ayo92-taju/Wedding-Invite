@@ -69,10 +69,38 @@ export async function setGuestCheckedIn(id, value, byEmail) {
 }
 
 export async function deleteGuests(ids) {
+  // Note which parties are affected so empties can be swept afterwards.
+  const affected = new Set()
+  try {
+    const snap = await getDocs(collection(db, GUESTS))
+    snap.forEach((d) => {
+      if (ids.includes(d.id) && d.data().partyId) affected.add(d.data().partyId)
+    })
+  } catch {
+    /* sweep is best-effort */
+  }
+
   for (let i = 0; i < ids.length; i += MAX_BATCH) {
     const batch = writeBatch(db)
     for (const id of ids.slice(i, i + MAX_BATCH)) batch.delete(doc(db, GUESTS, id))
     await batch.commit()
+  }
+
+  // Cascade: a party with no remaining guests is an orphan — remove it.
+  if (affected.size) {
+    try {
+      const remaining = await getDocs(collection(db, GUESTS))
+      const stillUsed = new Set()
+      remaining.forEach((d) => stillUsed.add(d.data().partyId))
+      const orphans = [...affected].filter((p) => !stillUsed.has(p))
+      if (orphans.length) {
+        const batch = writeBatch(db)
+        for (const p of orphans) batch.delete(doc(db, PARTIES, p))
+        await batch.commit()
+      }
+    } catch {
+      /* best-effort */
+    }
   }
 }
 

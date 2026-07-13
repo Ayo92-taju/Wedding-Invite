@@ -121,7 +121,7 @@ export default function LoveStory() {
                     <h3 className="font-serif text-lg md:text-xl text-bloom-charcoal dark:text-bloom-cream font-medium">
                       {event.title}
                     </h3>
-                    <p className="font-serif italic text-xs md:text-sm text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed pt-2">
+                    <p className="font-serif italic text-base md:text-lg text-bloom-sage-dark dark:text-bloom-sage/80 leading-relaxed pt-2">
                       {event.text}
                     </p>
                   </motion.div>
