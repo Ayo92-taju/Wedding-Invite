@@ -81,7 +81,7 @@ export const loveStory = [
   {
     year: 'Jul 2025',
     title: 'Kairos',
-    text: 'We had crossed paths a few times before, but it wasn’t until Kairos 😉 that everything changed.',
+    text: 'We had crossed paths a few times before, but it wasn’t until Kairos that everything changed.',
   },
   {
     year: 'Aug 2025',
@@ -106,7 +106,7 @@ export const loveStory = [
   {
     year: 'Aug 2026',
     title: 'A Threefold Cord',
-    text: 'And now, we get to spend the rest of our lives together as a threefold cord — God, him, me ❤️. And that is the part we’re most excited about.',
+    text: 'And now, we get to spend the rest of our lives together as a threefold cord — God, him, me. And that is the part we’re most excited about.',
   },
 ]
 
