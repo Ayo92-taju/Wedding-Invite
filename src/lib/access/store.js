@@ -59,6 +59,38 @@ export async function updateGuest(id, patch) {
   await updateDoc(doc(db, GUESTS, id), patch)
 }
 
+/* Bulk patch selected guests in Firestore-sized batches. */
+export async function bulkUpdateGuests(ids, patch, byEmail) {
+  const guestIds = [...new Set((ids || []).filter(Boolean))]
+  if (!guestIds.length) return 0
+
+  const payload = {}
+  if (Object.prototype.hasOwnProperty.call(patch || {}, 'rsvpStatus') && patch.rsvpStatus) {
+    payload.rsvpStatus = String(patch.rsvpStatus)
+  }
+  if (Object.prototype.hasOwnProperty.call(patch || {}, 'tableId')) {
+    payload.tableId = patch.tableId || null
+  }
+  if (Object.prototype.hasOwnProperty.call(patch || {}, 'checkedIn')) {
+    const value = !!patch.checkedIn
+    payload.checkedIn = value
+    payload.checkedInAt = value ? serverTimestamp() : null
+    payload.checkedInBy = value ? String(byEmail || 'admin') : null
+  }
+
+  if (!Object.keys(payload).length) throw new Error('No fields selected for bulk update.')
+
+  for (let i = 0; i < guestIds.length; i += MAX_BATCH) {
+    const batch = writeBatch(db)
+    for (const id of guestIds.slice(i, i + MAX_BATCH)) {
+      batch.update(doc(db, GUESTS, id), payload)
+    }
+    await batch.commit()
+  }
+
+  return guestIds.length
+}
+
 /* Admin-side manual check-in/undo (ushers use the transactional /scan flow). */
 export async function setGuestCheckedIn(id, value, byEmail) {
   await updateDoc(doc(db, GUESTS, id), {

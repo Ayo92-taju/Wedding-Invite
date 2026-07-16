@@ -73,7 +73,9 @@ export async function notifyParty({ origin, partyName, primaryName, email, phone
       const caption = `Entry pass — ${m.fullName}${m.tableName ? ` · Table ${m.tableName}` : ''} · ${m.inviteCode}\nNimi & Victor · Wed 12 Aug 2026 · #the3strandcord`
       try {
         out.whatsapp.push(await sendWhatsApp(phone, caption, httpsOrigin ? [passUrl(m)] : []))
+        console.log(out.whatsapp);
       } catch (err) {
+        console.log(err);
         out.whatsapp.push({ sent: false, error: err?.message })
       }
     }

@@ -82,7 +82,7 @@ export async function sendWhatsApp(phoneE164, body, mediaUrls = []) {
 
 /* The SMS text a guest receives (SMS can't carry images — codes + link). */
 export function passMessage({ partyName, members, siteUrl }) {
-  const lines = members.map((m) => `• ${m.fullName}${m.tableName ? ` — Table ${m.tableName}` : ''}: ${m.inviteCode}`)
+  const lines = members.map((m) => `• ${m.fullName}${m.tableName ? ` — ${m.tableName} Table` : ''}: ${m.inviteCode}`)
   const url = siteUrl || process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_URL || ''
   return [
     `Nimi & Victor — The Three-Strand Cord 💍`,
