@@ -25,9 +25,9 @@ export async function notifyParty({
 }) {
   const out = { emailed: false, sms: null, whatsapp: [] };
   const httpsOrigin = /^https:\/\//i.test(origin || "");
-  const siteUrl = "https://themomohs.site"; 
+  const siteUrl = "https://themomohs.site";
   const passUrl = (m) =>
-    `https://themomohs.site/api/pass-image?c=${encodeURIComponent(m.inviteCode)}`;
+    `${origin}/api/pass-image?c=${encodeURIComponent(m.inviteCode)}`;
 
   // ── Email ──
   const to = String(email || "")
