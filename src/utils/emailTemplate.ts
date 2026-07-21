@@ -76,8 +76,10 @@ export function partyConfirmationEmail(p: {
   primaryName: string
   members: ConfirmedMember[]
   declined?: boolean
+  siteUrl?: string
 }): { subject: string; html: string } {
   const first = p.primaryName.split(' ')[0] || p.primaryName
+  const website = String(p.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_URL || '').replace(/\/+$/, '')
 
   if (p.declined || p.members.length === 0) {
     const inner = `
@@ -133,6 +135,14 @@ export function partyConfirmationEmail(p: {
         ${detailRow('Attire', `${wedding.dressCode.text} · Colours of the day: ${couple.coloursOfDay}`)}
       </table>
     </td></tr>
+    ${website
+      ? `<tr><td style="padding:2px 40px 6px;text-align:center;">
+      <p style="font-size:15px;line-height:1.7;color:${C.ink};margin:0;">
+        Explore our wedding website for story, details, and updates:
+        <a href="${website}" style="color:${C.burgundy};text-decoration:underline;">${website}</a>
+      </p>
+    </td></tr>`
+      : ''}
     <tr><td style="padding:8px 40px 30px;">${passes}</td></tr>`
 
   return {

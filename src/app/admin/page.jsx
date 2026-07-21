@@ -291,8 +291,12 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
   const [statusFilter, setStatusFilter] = useState("all");
   const [tableFilter, setTableFilter] = useState("all");
   const [sel, setSel] = useState(() => new Set());
-  const [editingNameId, setEditingNameId] = useState("");
-  const [nameDraft, setNameDraft] = useState("");
+  const [editingGuestId, setEditingGuestId] = useState("");
+  const [contactDraft, setContactDraft] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+  });
   const [bulkStatus, setBulkStatus] = useState("unchanged");
   const [bulkTable, setBulkTable] = useState("unchanged");
   const [bulkCheckIn, setBulkCheckIn] = useState("unchanged");
@@ -388,37 +392,58 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
     }
   };
 
-  const startNameEdit = (guest) => {
-    setEditingNameId(guest.id);
-    setNameDraft(guest.fullName || "");
+  const startGuestEdit = (guest) => {
+    setEditingGuestId(guest.id);
+    setContactDraft({
+      fullName: guest.fullName || "",
+      phone: guest.phone || "",
+      email: guest.email || "",
+    });
     setErr("");
   };
 
-  const cancelNameEdit = () => {
-    setEditingNameId("");
-    setNameDraft("");
+  const cancelGuestEdit = () => {
+    setEditingGuestId("");
+    setContactDraft({ fullName: "", phone: "", email: "" });
   };
 
-  const saveNameEdit = async (guest) => {
-    const nextName = nameDraft.trim();
+  const saveGuestEdit = async (guest) => {
+    const nextName = contactDraft.fullName.trim();
+    const nextPhone = contactDraft.phone.trim();
+    const nextEmail = contactDraft.email.trim();
+
     if (!nextName) {
       setErr("Guest name cannot be empty.");
       return;
     }
 
-    if (nextName === String(guest.fullName || "").trim()) {
-      cancelNameEdit();
+    if (nextEmail && !/^\S+@\S+\.\S+$/.test(nextEmail)) {
+      setErr("Enter a valid email address or leave it blank.");
       return;
     }
 
-    setBusy(`name-${guest.id}`);
+    const updates = {};
+    const currentName = String(guest.fullName || "").trim();
+    const currentPhone = String(guest.phone || "").trim();
+    const currentEmail = String(guest.email || "").trim();
+
+    if (nextName !== currentName) updates.fullName = nextName;
+    if (nextPhone !== currentPhone) updates.phone = nextPhone || null;
+    if (nextEmail !== currentEmail) updates.email = nextEmail || null;
+
+    if (!Object.keys(updates).length) {
+      cancelGuestEdit();
+      return;
+    }
+
+    setBusy(`contact-${guest.id}`);
     setErr("");
     try {
-      await updateGuest(guest.id, { fullName: nextName });
-      cancelNameEdit();
-      setErr("✓ Guest name updated.");
+      await updateGuest(guest.id, updates);
+      cancelGuestEdit();
+      setErr("✓ Guest details updated.");
     } catch (e) {
-      setErr(e?.message || "Could not update guest name.");
+      setErr(e?.message || "Could not update guest details.");
     }
     setBusy("");
   };
@@ -811,6 +836,8 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                   <th className="text-left px-3 py-2">Name</th>
                   <th className="text-left px-3 py-2">Party</th>
                   <th className="text-left px-3 py-2">Code</th>
+                  <th className="text-left px-3 py-2">Phone</th>
+                  <th className="text-left px-3 py-2">Email</th>
                   <th className="text-left px-3 py-2">RSVP</th>
                   <th className="text-left px-3 py-2">Table</th>
                   <th className="text-left px-3 py-2">In</th>
@@ -818,7 +845,9 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                 </tr>
               </thead>
               <tbody>
-                {pageGuests.map((g) => (
+                {pageGuests.map((g) => {
+                  const isEditing = editingGuestId === g.id;
+                  return (
                   <tr key={g.id} className="border-t border-bloom-gold/10">
                     <td className="px-3 py-2">
                       <input
@@ -828,31 +857,36 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                       />
                     </td>
                     <td className="px-3 py-2">
-                      {editingNameId === g.id ? (
+                      {isEditing ? (
                         <div className="flex items-center gap-2">
                           <input
-                            value={nameDraft}
-                            onChange={(e) => setNameDraft(e.target.value)}
+                            value={contactDraft.fullName}
+                            onChange={(e) =>
+                              setContactDraft((d) => ({
+                                ...d,
+                                fullName: e.target.value,
+                              }))
+                            }
                             onKeyDown={(e) => {
-                              if (e.key === "Enter") saveNameEdit(g);
-                              if (e.key === "Escape") cancelNameEdit();
+                              if (e.key === "Enter") saveGuestEdit(g);
+                              if (e.key === "Escape") cancelGuestEdit();
                             }}
                             className="w-full min-w-[180px] bg-white border border-bloom-gold/20 rounded px-2 py-1 text-sm"
                             autoFocus
                           />
                           <IconButton
                             title={
-                              busy === `name-${g.id}`
-                                ? "Saving name…"
-                                : "Save name"
+                              busy === `contact-${g.id}`
+                                ? "Saving details…"
+                                : "Save details"
                             }
                             ariaLabel={
-                              busy === `name-${g.id}`
-                                ? "Saving name"
-                                : "Save guest name"
+                              busy === `contact-${g.id}`
+                                ? "Saving details"
+                                : "Save guest details"
                             }
-                            onClick={() => saveNameEdit(g)}
-                            disabled={busy === `name-${g.id}`}
+                            onClick={() => saveGuestEdit(g)}
+                            disabled={busy === `contact-${g.id}`}
                             className="border border-bloom-gold/25 text-bloom-gold hover:bg-bloom-gold/10"
                           >
                             <Save className="h-4 w-4" />
@@ -860,7 +894,7 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                           <IconButton
                             title="Cancel editing"
                             ariaLabel="Cancel editing"
-                            onClick={cancelNameEdit}
+                            onClick={cancelGuestEdit}
                             className="border border-bloom-gold/15 text-bloom-sage-dark hover:bg-bloom-cream"
                           >
                             ×
@@ -876,9 +910,9 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                           )}
                           <SquarePen
                             className="h-3.5 w-3.5 text-bloom-gold cursor-pointer"
-                            title="Edit guest name"
-                            ariaLabel={`Edit name for ${g.fullName}`}
-                            onClick={() => startNameEdit(g)}
+                            title="Edit guest details"
+                            ariaLabel={`Edit details for ${g.fullName}`}
+                            onClick={() => startGuestEdit(g)}
                           />
                         </div>
                       )}
@@ -887,6 +921,49 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                       {partyName(g.partyId)}
                     </td>
                     <td className="px-3 py-2 font-mono">{g.inviteCode}</td>
+                    <td className="px-3 py-2">
+                      {isEditing ? (
+                        <input
+                          value={contactDraft.phone}
+                          onChange={(e) =>
+                            setContactDraft((d) => ({
+                              ...d,
+                              phone: e.target.value,
+                            }))
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") saveGuestEdit(g);
+                            if (e.key === "Escape") cancelGuestEdit();
+                          }}
+                          className="w-full min-w-[160px] bg-white border border-bloom-gold/20 rounded px-2 py-1 text-sm"
+                          placeholder="Phone"
+                        />
+                      ) : (
+                        <span className="text-bloom-sage-dark">{g.phone || "—"}</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2">
+                      {isEditing ? (
+                        <input
+                          type="email"
+                          value={contactDraft.email}
+                          onChange={(e) =>
+                            setContactDraft((d) => ({
+                              ...d,
+                              email: e.target.value,
+                            }))
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") saveGuestEdit(g);
+                            if (e.key === "Escape") cancelGuestEdit();
+                          }}
+                          className="w-full min-w-[200px] bg-white border border-bloom-gold/20 rounded px-2 py-1 text-sm"
+                          placeholder="Email"
+                        />
+                      ) : (
+                        <span className="text-bloom-sage-dark">{g.email || "—"}</span>
+                      )}
+                    </td>
                     <td className="px-3 py-2">
                       <select
                         value={g.rsvpStatus || "PENDING"}
@@ -988,7 +1065,7 @@ function GuestsTab({ guests, parties, tables, adminEmail }) {
                       </div>
                     </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
           </div>
